@@ -1,0 +1,35 @@
+// .form-group {
+//    border: 1px solid #ECECEC;
+//    border-radius: 3px;
+// }
+.form-control {
+    border: 1px solid #ECECEC;
+    border-radius: 3px;
+    height: 36px !important;
+    font-size: 13px;
+  }
+  
+  // :host() {
+  //    &.ng-invalid {
+  //       .form-control {
+  //          border-color: red !important;
+  //       }
+  //    }
+  // }F
+  
+  
+  :host-context(.ng-invalid) {
+    .show-error {
+      .form-control {
+        border-color: red !important;
+      }
+    }
+  }
+  
+  :host-context(.ng-valid) {
+    .show-error {
+      .form-control {
+        border-color: #ECECEC !important;
+      }
+    }
+  }

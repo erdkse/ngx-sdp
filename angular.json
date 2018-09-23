@@ -126,7 +126,7 @@
       "root": "projects/ngx-sdp",
       "sourceRoot": "projects/ngx-sdp/src",
       "projectType": "library",
-      "prefix": "sdp",
+      "prefix": "ngx",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
