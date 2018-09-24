@@ -78,6 +78,12 @@ export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
         this.propagateChange(null);
       }
     });
+
+    this.dateForm.patchValue({
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+      day: new Date().getDate()
+    });
   }
 
   writeValue(date: Date): void {
