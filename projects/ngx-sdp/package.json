@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "license": "WTFPL",
   "description":"a datepicker to pick a date",
-  "keywords":["selection","datepicker","selection datepicker"],
+  "keywords":["selection","datepicker","selection datepicker","angular"],
   "author": {
     "name": "Erdi Köse",
     "email": "me@erdkse.com",
