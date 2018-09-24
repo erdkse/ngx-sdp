@@ -1,6 +1,18 @@
 {
   "name": "ngx-sdp",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "license": "WTFPL",
+  "description":"a datepicker to pick a date",
+  "keywords":["selection","datepicker","selection datepicker"],
+  "author": {
+    "name": "Erdi Köse",
+    "email": "me@erdkse.com",
+    "url": "https://erdkse.com/"
+  },
+  "repository": {
+    "url": "https://github.com/erdkse/ngx-sdp.git",
+    "type": "git"
+  },
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
