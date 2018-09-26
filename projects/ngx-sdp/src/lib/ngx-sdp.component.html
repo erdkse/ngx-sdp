@@ -6,7 +6,7 @@
     </div>
     <div class="form-group col-sm-12 col-md-4">
       <select class="form-control" formControlName="month">
-        <option *ngFor="let month of months" [ngValue]="month" [selected]="dateForm.controls['month'].value === month">{{monthLabel['tr'][month]}}</option>
+        <option *ngFor="let month of months" [ngValue]="month" [selected]="dateForm.controls['month'].value === month">{{monthLabel[this.language][month]}}</option>
       </select>
     </div>
     <div class="form-group col-sm-12 col-md-4">
@@ -15,4 +15,3 @@
       </select>
     </div>
   </form>
-  

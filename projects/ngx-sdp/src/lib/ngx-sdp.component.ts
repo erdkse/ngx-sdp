@@ -23,6 +23,8 @@ export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
   showError: boolean = false;
   @Input()
   maxDate: Date;
+  @Input()
+  language: string = 'en';
   public minYear: number = 1900;
   public maxYear = new Date().getFullYear();
   public monthLabel = MONTH_LABEL;
@@ -155,16 +157,16 @@ export const MONTH_LABEL = {
   ],
   en: [
     'January',
-    'Fabrurary',
+    'Fabruary',
     'March',
     'April',
     'May',
     'June',
     'July',
-    'Agust',
+    'August',
     'September',
     'October',
-    'Novermber',
+    'November',
     'December'
   ]
 };
