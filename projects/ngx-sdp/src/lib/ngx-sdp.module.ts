@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { NgxSdpComponent } from './ngx-sdp.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule, ReactiveFormsModule
+    ReactiveFormsModule
   ],
   declarations: [NgxSdpComponent],
   exports: [NgxSdpComponent]

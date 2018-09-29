@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { NgxSdpModule } from '../../projects/ngx-sdp/src/lib/ngx-sdp.module';
+import { ReactiveFormsModule } from '@angular/forms';
 // import { NgxSdpModule } from 'ngx-sdp';
 
 @NgModule({
@@ -10,7 +11,8 @@ import { NgxSdpModule } from '../../projects/ngx-sdp/src/lib/ngx-sdp.module';
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    ReactiveFormsModule,
+    BrowserModule.withServerTransition({ appId: 'ngx-sdp-demo' }),
     NgxSdpModule
   ],
   providers: [],

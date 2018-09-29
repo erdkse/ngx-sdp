@@ -2,7 +2,7 @@
 
   <h3>Select a date..</h3>
 
-  <div class="mt-5">
-      <ngx-sdp [language]="'en'"></ngx-sdp>
-  </div>
+  <form [formGroup]="form" class="mt-5">
+      <ngx-sdp formControlName="date" [language]="'en'"></ngx-sdp>
+  </form>
 </div>

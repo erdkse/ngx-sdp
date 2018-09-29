@@ -1,17 +1,19 @@
-<form class="form-row" [ngClass]="{'show-error':showError}" [formGroup]="dateForm">
+<form [ngClass]="{'show-error':showError}" [formGroup]="dateForm">
+  <div class="form-row">
     <div class="form-group col-sm-12 col-md-4">
       <select class="form-control" formControlName="day">
-        <option *ngFor="let day of days" [ngValue]="day" [selected]="dateForm.controls['day'].value === day">{{day}}</option>
+        <option *ngFor="let day of days" [value]="day" [selected]="dateForm.controls['day'].value === day">{{day}}</option>
       </select>
     </div>
     <div class="form-group col-sm-12 col-md-4">
       <select class="form-control" formControlName="month">
-        <option *ngFor="let month of months" [ngValue]="month" [selected]="dateForm.controls['month'].value === month">{{monthLabel[this.language][month]}}</option>
+        <option *ngFor="let month of months" [value]="month" [selected]="dateForm.controls['month'].value === month">{{monthLabel[this.language][month]}}</option>
       </select>
     </div>
     <div class="form-group col-sm-12 col-md-4">
       <select class="form-control" formControlName="year">
-        <option *ngFor="let year of years" [ngValue]="year" [selected]="dateForm.controls['year'].value === year">{{year}}</option>
+        <option *ngFor="let year of years" [value]="year" [selected]="dateForm.controls['year'].value === year">{{year}}</option>
       </select>
     </div>
-  </form>
+  </div>
+</form>
