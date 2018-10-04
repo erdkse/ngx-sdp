@@ -157,7 +157,7 @@ export const MONTH_LABEL = {
   ],
   en: [
     'January',
-    'Fabruary',
+    'February',
     'March',
     'April',
     'May',
