@@ -2,9 +2,7 @@ import {
   Component,
   OnInit,
   forwardRef,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
+  Input
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -25,7 +23,6 @@ import {
       multi: true
     }
   ]
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   public days = [];
@@ -46,7 +43,7 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   public today: Date = new Date();
   public propagateChange = (_: any) => {};
 
-  constructor(private changeDetectionRef: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit() {
     this.minYear = this.minDate ? this.minDate.getFullYear() : this.minYear;
@@ -96,9 +93,6 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
-      // this.changeDetectionRef.detectChanges();
-      console.log('date', this.dateForm.value);
-      console.log('day', day);
       this.propagateChange(
         new Date(
           Date.UTC(
@@ -113,36 +107,6 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
         )
       );
     });
-
-    // this.dateForm.valueChanges.subscribe(value => {
-    //   if (
-    //     value &&
-    //     !(value.day === 0 && value.month === 0 && value.year === 0)
-    //   ) {
-    //     this.days = [
-    //       ...Array.from(
-    //         { length: this.daysInMonth(value.month, value.year) },
-    //         (v, k) => k + 1
-    //       )
-    //     ];
-    //     console.log('days', this.days);
-    //     this.propagateChange(
-    //       new Date(
-    //         Date.UTC(
-    //           value.year,
-    //           value.month,
-    //           this.days.findIndex(e => e === value.day) > -1 ? value.day : 1,
-    //           0,
-    //           0,
-    //           0,
-    //           0
-    //         )
-    //       )
-    //     );
-    //   } else {
-    //     this.propagateChange(null);
-    //   }
-    // });
 
     this.dateForm.patchValue({
       year: new Date().getFullYear(),
