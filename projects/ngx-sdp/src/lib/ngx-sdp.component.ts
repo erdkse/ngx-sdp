@@ -1,5 +1,18 @@
-import { Component, OnInit, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  forwardRef,
+  Input,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
+import {
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'ngx-sdp',
@@ -12,8 +25,9 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormGroup, FormControl, Valida
       multi: true
     }
   ]
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
+export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   public days = [];
   public months = [];
   public years = [];
@@ -32,7 +46,7 @@ export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
   public today: Date = new Date();
   public propagateChange = (_: any) => {};
 
-  constructor() {}
+  constructor(private changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.minYear = this.minDate ? this.minDate.getFullYear() : this.minYear;
@@ -51,35 +65,84 @@ export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
       year: new FormControl(null, Validators.required)
     });
 
-    this.dateForm.valueChanges.subscribe(value => {
-      if (
-        value &&
-        !(value.day === 0 && value.month === 0 && value.year === 0)
-      ) {
-        this.days = [
-          ...Array.from(
-            { length: this.daysInMonth(value.month, value.year) },
-            (v, k) => k + 1
-          )
-        ];
+    this.dateForm.controls.year.valueChanges.subscribe(year => {
+      this.days = [
+        ...Array.from(
+          { length: this.daysInMonth(this.dateForm.value.month, year) },
+          (v, k) => k + 1
+        )
+      ];
 
-        this.propagateChange(
-          new Date(
-            Date.UTC(
-              value.year,
-              value.month,
-              this.days.findIndex(e => e === value.day) > -1 ? value.day : 1,
-              0,
-              0,
-              0,
-              0
-            )
-          )
-        );
-      } else {
-        this.propagateChange(null);
-      }
+      this.dateForm.controls.day.patchValue(
+        this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
+          ? +this.dateForm.value.day
+          : 1
+      );
     });
+
+    this.dateForm.controls.month.valueChanges.subscribe(month => {
+      this.days = [
+        ...Array.from(
+          { length: this.daysInMonth(month, this.dateForm.value.year) },
+          (v, k) => k + 1
+        )
+      ];
+
+      this.dateForm.controls.day.patchValue(
+        this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
+          ? +this.dateForm.value.day
+          : 1
+      );
+    });
+
+    this.dateForm.controls.day.valueChanges.subscribe(day => {
+      // this.changeDetectionRef.detectChanges();
+      console.log('date', this.dateForm.value);
+      console.log('day', day);
+      this.propagateChange(
+        new Date(
+          Date.UTC(
+            +this.dateForm.controls.year.value,
+            +this.dateForm.controls.month.value,
+            +day,
+            0,
+            0,
+            0,
+            0
+          )
+        )
+      );
+    });
+
+    // this.dateForm.valueChanges.subscribe(value => {
+    //   if (
+    //     value &&
+    //     !(value.day === 0 && value.month === 0 && value.year === 0)
+    //   ) {
+    //     this.days = [
+    //       ...Array.from(
+    //         { length: this.daysInMonth(value.month, value.year) },
+    //         (v, k) => k + 1
+    //       )
+    //     ];
+    //     console.log('days', this.days);
+    //     this.propagateChange(
+    //       new Date(
+    //         Date.UTC(
+    //           value.year,
+    //           value.month,
+    //           this.days.findIndex(e => e === value.day) > -1 ? value.day : 1,
+    //           0,
+    //           0,
+    //           0,
+    //           0
+    //         )
+    //       )
+    //     );
+    //   } else {
+    //     this.propagateChange(null);
+    //   }
+    // });
 
     this.dateForm.patchValue({
       year: new Date().getFullYear(),
@@ -135,8 +198,8 @@ export class NgxSdpComponent   implements OnInit, ControlValueAccessor {
     );
   }
 
-  daysInMonth(month, year) {
-    return new Date(Date.UTC(year, month + 1, 0, 0, 0, 0, 0)).getDate();
+  daysInMonth(month: number, year: number) {
+    return new Date(Date.UTC(+year, +month + 1, 0, 0, 0, 0, 0)).getDate();
   }
 }
 

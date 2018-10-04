@@ -4,11 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   declarations: [NgxSdpComponent],
   exports: [NgxSdpComponent]
 })
-export class NgxSdpModule { }
+export class NgxSdpModule {}
