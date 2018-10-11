@@ -58,28 +58,47 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
 
     this.dateForm.controls.year.valueChanges.subscribe(year => {
-      this.setAvailableDays(this.dateForm.value.month, year);
+      if (!this.dateForm.disabled) {
+        this.setAvailableDays(
+          this.dateForm.value.month,
+          this.dateForm.value.year
+        );
+      }
     });
 
     this.dateForm.controls.month.valueChanges.subscribe(month => {
-      this.setAvailableDays(month, this.dateForm.value.year);
+      if (!this.dateForm.disabled) {
+        this.setAvailableDays(
+          this.dateForm.value.month,
+          this.dateForm.value.year
+        );
+      }
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
       console.log('form', this.dateForm.value);
-      this.propagateChange(
-        new Date(
-          Date.UTC(
-            +this.dateForm.value.year,
-            +this.dateForm.value.month,
-            +this.dateForm.value.day,
-            0,
-            0,
-            0,
-            0
+
+      if (
+        this.dateForm.value.year &&
+        this.dateForm.value.month &&
+        this.dateForm.value.day
+      ) {
+        this.propagateChange(
+          new Date(
+            Date.UTC(
+              +this.dateForm.value.year,
+              +this.dateForm.value.month,
+              +this.dateForm.value.day,
+              0,
+              0,
+              0,
+              0
+            )
           )
-        )
-      );
+        );
+      } else {
+        this.propagateChange(null);
+      }
     });
 
     this.dateForm.patchValue({
@@ -95,7 +114,7 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     ];
 
     this.dateForm.controls.day.patchValue(
-      this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
+      this.days.findIndex(e => e === this.dateForm.value.day) > -1
         ? +this.dateForm.value.day
         : 1
     );

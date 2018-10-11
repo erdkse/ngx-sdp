@@ -8,6 +8,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   public form: FormGroup;
+  public minDate = new Date(Date.parse('01/01/1950'));
   public selectedDates = [];
 
   ngOnInit(): void {
