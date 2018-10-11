@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  forwardRef,
-  Input
-} from '@angular/core';
+import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
@@ -63,42 +58,21 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
 
     this.dateForm.controls.year.valueChanges.subscribe(year => {
-      this.days = [
-        ...Array.from(
-          { length: this.daysInMonth(this.dateForm.value.month, year) },
-          (v, k) => k + 1
-        )
-      ];
-
-      this.dateForm.controls.day.patchValue(
-        this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
-          ? +this.dateForm.value.day
-          : 1
-      );
+      this.setAvailableDays(this.dateForm.value.month, year);
     });
 
     this.dateForm.controls.month.valueChanges.subscribe(month => {
-      this.days = [
-        ...Array.from(
-          { length: this.daysInMonth(month, this.dateForm.value.year) },
-          (v, k) => k + 1
-        )
-      ];
-
-      this.dateForm.controls.day.patchValue(
-        this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
-          ? +this.dateForm.value.day
-          : 1
-      );
+      this.setAvailableDays(month, this.dateForm.value.year);
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
+      console.log('form', this.dateForm.value);
       this.propagateChange(
         new Date(
           Date.UTC(
-            +this.dateForm.controls.year.value,
-            +this.dateForm.controls.month.value,
-            +day,
+            +this.dateForm.value.year,
+            +this.dateForm.value.month,
+            +this.dateForm.value.day,
             0,
             0,
             0,
@@ -113,6 +87,18 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
       month: new Date().getMonth(),
       day: new Date().getDate()
     });
+  }
+
+  setAvailableDays(month, year) {
+    this.days = [
+      ...Array.from({ length: this.daysInMonth(month, year) }, (v, k) => k + 1)
+    ];
+
+    this.dateForm.controls.day.patchValue(
+      this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
+        ? +this.dateForm.value.day
+        : 1
+    );
   }
 
   writeValue(date: Date): void {
