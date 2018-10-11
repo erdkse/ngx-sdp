@@ -78,27 +78,19 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     this.dateForm.controls.day.valueChanges.subscribe(day => {
       console.log('form', this.dateForm.value);
 
-      if (
-        this.dateForm.value.year &&
-        this.dateForm.value.month &&
-        this.dateForm.value.day
-      ) {
-        this.propagateChange(
-          new Date(
-            Date.UTC(
-              +this.dateForm.value.year,
-              +this.dateForm.value.month,
-              +this.dateForm.value.day,
-              0,
-              0,
-              0,
-              0
-            )
+      this.propagateChange(
+        new Date(
+          Date.UTC(
+            +this.dateForm.controls.year.value,
+            +this.dateForm.controls.month.value,
+            +this.dateForm.controls.day.value,
+            0,
+            0,
+            0,
+            0
           )
-        );
-      } else {
-        this.propagateChange(null);
-      }
+        )
+      );
     });
 
     this.dateForm.patchValue({
