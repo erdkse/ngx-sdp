@@ -76,7 +76,6 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
-      console.log('form', this.dateForm.value);
 
       this.propagateChange(
         new Date(
