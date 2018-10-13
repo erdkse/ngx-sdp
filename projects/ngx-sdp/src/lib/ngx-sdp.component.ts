@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  forwardRef,
-  Input
-} from '@angular/core';
+import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
@@ -63,22 +58,31 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
 
     this.dateForm.controls.year.valueChanges.subscribe(year => {
-      this.days = this.getAvailableDays(this.dateForm.value.month, year);
-      this.setDayValue(+this.dateForm.value.day);
+      if (!this.dateForm.disabled) {
+        this.setAvailableDays(
+          this.dateForm.value.month,
+          this.dateForm.value.year
+        );
+      }
     });
 
     this.dateForm.controls.month.valueChanges.subscribe(month => {
-      this.days = this.getAvailableDays(month, this.dateForm.value.year);
-      this.setDayValue(+this.dateForm.value.day);
+      if (!this.dateForm.disabled) {
+        this.setAvailableDays(
+          this.dateForm.value.month,
+          this.dateForm.value.year
+        );
+      }
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
+
       this.propagateChange(
         new Date(
           Date.UTC(
             +this.dateForm.controls.year.value,
             +this.dateForm.controls.month.value,
-            +day,
+            +this.dateForm.controls.day.value,
             0,
             0,
             0,
@@ -95,18 +99,16 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  private getAvailableDays(month, year): number[] {
-    return [
-      ...Array.from(
-        {
-          length: this.daysInMonth(month, year)
-        }, (v, k) => k + 1
-      )
+  setAvailableDays(month, year) {
+    this.days = [
+      ...Array.from({ length: this.daysInMonth(month, year) }, (v, k) => k + 1)
     ];
-  }
 
-  private setDayValue(day: number) {
-    this.dateForm.controls.day.patchValue(this.days.findIndex(e => +e === day) > -1 ? day : 1);
+    this.dateForm.controls.day.patchValue(
+      this.days.findIndex(e => e === this.dateForm.value.day) > -1
+        ? +this.dateForm.value.day
+        : 1
+    );
   }
 
   writeValue(date: Date): void {
