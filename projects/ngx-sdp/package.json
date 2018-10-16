@@ -1,6 +1,6 @@
 {
   "name": "ngx-sdp",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "WTFPL",
   "description": "a datepicker to pick a date",
   "keywords": ["selection", "datepicker", "selection datepicker", "angular"],
