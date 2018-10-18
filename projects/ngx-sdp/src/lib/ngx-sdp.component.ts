@@ -60,8 +60,8 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     this.dateForm.controls.year.valueChanges.subscribe(year => {
       if (!this.dateForm.disabled) {
         this.setAvailableDays(
-          this.dateForm.value.month,
-          this.dateForm.value.year
+          this.dateForm.controls.month.value,
+          this.dateForm.controls.year.value
         );
       }
     });
@@ -69,14 +69,13 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     this.dateForm.controls.month.valueChanges.subscribe(month => {
       if (!this.dateForm.disabled) {
         this.setAvailableDays(
-          this.dateForm.value.month,
-          this.dateForm.value.year
+          this.dateForm.controls.month.value,
+          this.dateForm.controls.year.value
         );
       }
     });
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
-
       this.propagateChange(
         new Date(
           Date.UTC(
@@ -101,11 +100,11 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
 
   setAvailableDays(month, year) {
     this.days = [
-      ...Array.from({ length: this.daysInMonth(month, year) }, (v, k) => k + 1)
+      ...Array.from({ length: this.daysInMonth(+month, year) }, (v, k) => k + 1)
     ];
 
     this.dateForm.controls.day.patchValue(
-      this.days.findIndex(e => e === this.dateForm.value.day) > -1
+      this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
         ? +this.dateForm.value.day
         : 1
     );
@@ -159,6 +158,9 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   }
 
   daysInMonth(month: number, year: number) {
+    if (!month || !year) {
+      return 0;
+    }
     return new Date(Date.UTC(+year, +month + 1, 0, 0, 0, 0, 0)).getDate();
   }
 }

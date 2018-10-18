@@ -1,19 +1,48 @@
 {
   "version": "0.2.0",
   "configurations": [
+    //   {
+    //   "type": "chrome",
+    //   "request": "launch",
+    //   "name": "Launch Chromium against localhost",
+    //   "url": "http://localhost:4200",
+    //   "webRoot": "${workspaceFolder}",
+    //   "runtimeExecutable": "/usr/bin/chromium-browser",
+    //   "runtimeArgs": [
+    //     "--new-window",
+    //     "-user-data-dir=\"/${workspaceFolder}/DevProfile\"",
+    //     "--remote-debugging-port=9222",
+    //     "--disable-background-networking"
+    //   ]
+    // }
     {
+      "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chromium against localhost",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}",
-      "runtimeExecutable": "/usr/bin/chromium-browser",
-      "runtimeArgs": [
-        "--new-window",
-        "-user-data-dir=\"/${workspaceFolder}/DevProfile\"",
-        "--remote-debugging-port=9222",
-        "--disable-background-networking"
-      ]
-  }
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Chrome (Test)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:9876/debug.html",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Chrome (E2E)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
+      "protocol": "inspector",
+      "args": ["${workspaceFolder}/protractor.conf.js"]
+    }
   ]
 }
