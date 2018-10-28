@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "test:ngx-sdp":"ng test ngx-sdp",
     "build:ssr": "npm run build:client-and-server-bundles && npm run webpack:server",
     "serve:ssr": "node dist/server",
     "build:client-and-server-bundles": "ng build --prod && ng run ngx-sdp-demo:server",
