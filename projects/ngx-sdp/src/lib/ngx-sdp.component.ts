@@ -34,6 +34,7 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   public minYear: number = 1900;
   public maxYear = new Date().getFullYear();
   public monthLabel = MONTH_LABEL;
+  public defaultLabel = DEFAULT_LABEL;
   public dateForm: FormGroup;
   public today: Date = new Date();
   public propagateChange = (_: any) => {};
@@ -194,4 +195,17 @@ export const MONTH_LABEL = {
     'November',
     'December'
   ]
+};
+
+export const DEFAULT_LABEL = {
+  tr: {
+    day: 'Gün seçiniz',
+    month: 'Ay seçiniz',
+    year: 'Yıl seçiniz'
+  },
+  en: {
+    day: 'Pick a day',
+    month: 'Pick a month',
+    year: 'Pick a year'
+  }
 };

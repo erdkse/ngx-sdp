@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgxSdpComponent, MONTH_LABEL } from './ngx-sdp.component';
+import {
+  NgxSdpComponent,
+  MONTH_LABEL,
+  DEFAULT_LABEL
+} from './ngx-sdp.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -21,7 +25,9 @@ describe('NgxSdpComponent', () => {
       0
     )
   );
+  const givenDate: Date = new Date(Date.UTC(1990, 7, 1, 0, 0, 0, 0));
   const monthLabel = MONTH_LABEL;
+  const defaultLabel = DEFAULT_LABEL;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -63,18 +69,22 @@ describe('NgxSdpComponent', () => {
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
       +daySelection.options[daySelection.selectedIndex].innerHTML
     ]);
+
+    // expect([
+    //   defaultLabel.en.year,
+    //   defaultLabel.en.month,
+    //   defaultLabel.en.day
+    // ]).toEqual([
+    //   yearSelection.options[yearSelection.selectedIndex].innerHTML,
+    //   monthSelection.options[monthSelection.selectedIndex].innerHTML,
+    //   daySelection.options[daySelection.selectedIndex].innerHTML
+    // ]);
   });
 
   it('should select given date', () => {
-    const givenDate: Date = new Date(Date.UTC(1990, 7, 1, 0, 0, 0, 0));
-
     component.writeValue(givenDate);
 
-    expect([
-      givenDate.getFullYear(),
-      monthLabel[component.language][givenDate.getMonth()],
-      givenDate.getDate()
-    ]).toEqual([
+    expect([1990, monthLabel[component.language][7], 1]).toEqual([
       +yearSelection.options[yearSelection.selectedIndex].innerHTML,
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
       +daySelection.options[daySelection.selectedIndex].innerHTML
@@ -141,5 +151,22 @@ describe('NgxSdpComponent', () => {
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
       +daySelection.options[daySelection.selectedIndex].innerHTML
     ]);
+  });
+
+  it('should display months in english on default', () => {
+    component.writeValue(givenDate);
+
+    expect(monthLabel[component.language][givenDate.getMonth()]).toEqual(
+      'August'
+    );
+  });
+
+  it('should change language', () => {
+    component.writeValue(givenDate);
+    component.language = 'tr';
+
+    expect(monthLabel[component.language][givenDate.getMonth()]).toEqual(
+      'Ağustos'
+    );
   });
 });
