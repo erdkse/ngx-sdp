@@ -9,6 +9,9 @@
     "email": "me@erdkse.com",
     "url": "https://erdkse.com/"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "url": "https://github.com/erdkse/ngx-sdp.git",
     "type": "git"
@@ -16,9 +19,9 @@
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/forms":"^6.0.0-rc.0 || ^6.0.0",
-    "@angular/platform-browser":"^6.0.0-rc.0 || ^6.0.0",
-    "@angular/compiler":"^6.0.0-rc.0 || ^6.0.0",
+    "@angular/forms": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/platform-browser": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/compiler": "^6.0.0-rc.0 || ^6.0.0",
     "rxjs": "^6.3.3"
   }
 }

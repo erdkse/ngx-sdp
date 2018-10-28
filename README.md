@@ -1,7 +1,7 @@
 # ngx-sdp 
 
 
-![npm](https://img.shields.io/npm/dw/ngx-sdp.svg) 
+![npm](https://img.shields.io/npm/dm/ngx-sdp.svg) 
 ![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/ngx-sdp.svg) 
 ![NpmLicense](https://img.shields.io/npm/l/ngx-sdp.svg) 
 ![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/ngx-sdp.svg)
