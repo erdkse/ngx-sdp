@@ -5,8 +5,8 @@ language: node_js
 node_js:
 - node
 script:
-- npm run test-ci
-- npm run build-ci
+- npm run test:ci
+- npm run build:ci
 before_deploy:
 - cd dist/ngx-sdp
 deploy:
