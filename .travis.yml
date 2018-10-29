@@ -3,20 +3,19 @@ addons:
   chrome: stable
 language: node_js
 node_js:
-  - node
+- node
 script:
-  - npm run test:ci
-  - npm run build:ci
+- npm run test:ci
+- npm run build:ci
 before_deploy:
-  - npm install -g npm@'>=6'
-  - cd dist/ngx-sdp
+- npm install -g npm@'>=6'
+- cd dist/ngx-sdp
 deploy:
   provider: npm
   email: erdikose8@gmail.com
   api_key:
-    secure: HR+vU75i13cg+k1Yt3npSjSRtvRFYsRTEFUE8oY11wxU04fhehsF/KbyB7f3Df+13etJO+u3fa7XThgOt2iooQ8jjTVvZ2FUirElPDIJlTEMAQudUzPcsllk6BLHo7Ezcb2udr9b/30+ZOuqYgvWDiZEcCDi+zvME+13BREYw87RN1MsstySZtkbyh6pCTKxtRc3ePn9LNHmXuRdpGfSd5mFdvoCkbR+9JM33d3uQLTX/38+UfJGxtL7Gy+qrR6Uzv4hwa+8C6yYrdSs5ok4nTKDmGsT3s+oubvtk6vzr8vYywFP4chW3ULa8oXzCrjhpNprzPf77O1ZgPDFtYzCAsKAUnK16XDoofBWZ4umyDBck566whbmFdCmOd90IMmN5/I7H2ZGxQI9ohLEV28CMqmt5HCb0+wPzcoaS+9WgYK/qvGpvYI2bfOAJMTw6Ag5d2D04Y9DV6srUw85s5t2EVIZmCz3LJAlV0KaKDmivsOzV5U/H+Upx7wwFZAcaIbXfN6l9swyVgD8Bek7XnFl02cMrjNM1hqEigiUAjBW7NzFNu7AhEyNfdGj4CWLLPR0FoumDn7XPVdy3cs/Q3/rjkoH4y6rPnaP4fLwGDK0ZAm2SLOUZHJ9hYXWC75cepgvEVpRRlutSpkUvdFUBEP1TRtapKm+JUtD3sms2uEP3Ak=
+    secure: R7dfdTkvjacQ2JrAtTQX0l7wLI07ntsP/0bNk7HGMnQXHcjlQHm8KmYSS1lNIszGn1N+JJoLbHC0MdC5fQ4538fSYAem4+QHGjvjHDoKFODnaP+f74kk2dnuThPVRMzwAtxtDXJH8+5IPXPDhLSSLbF4r3B22bVeoj1lbvdXHyf3Js4v67OUQoXpbAEdexbOLBFm8mHwV2pmbkTEBW4jkI74m6I/LhedENXuHH/Y9hEBGFEqcy3xmXu1Kp6GJeN98Vm37neA/yysCXicaaqfHOSkEo1YfOhMKjuvO6OuS0FAnmXWNusnCazBuuIgoJKRSJm/IFTmgKoO8gSxCz4mT7yG4U7QRbe5LwD4Mpb5kyTYnRiKDQxeTa6inqvOOj468Olru1bBCGOtwWJiu8HU3eWs4rulnHYp8bjBKlowHGsgGUaeo/gt+ttD1ygvw9cnIjJzlQu6LpqzFEUMwcZ/ki4TqyMJPTzg5gB35AeAABBmnbDsRwDLGeIudQPIJJ7JyRF7/iuGKiYobdsvnZS1ft+a53957TT8Ez14sboyg5+JrEvyFuhB0yLTL07/VG/ZxAHt5B/epKmTVYpYQkBY7cC99P+GahylmzMF72OgVxURibovwXN9S5s0v0RJJfhOlDV7jsU+B15NXQnDRYgv/K6LYrt8N+4BKBVXFk/6jO0=
   on:
-    - tags: true
-    - branch: master
-    - repo: erdkse/ngx-sdp
-    - skip_cleanup: true
+    tags: true
+    repo: erdkse/ngx-sdp
+    branch: master
