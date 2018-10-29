@@ -1,15 +1,11 @@
 dist: trusty
-sudo: false
+sudo: required
 language: node_js
 node_js:
   - '8'
 
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 
 cache:
   directories:
@@ -26,7 +22,7 @@ script:
   - npm run test:ci
   - npm run build:ci
 after_script:
-  - ./cc-test-reporter after-build --prefix ./projects  --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 before_deploy:
   - npm install -g npm@'>=6'
   - cd dist/ngx-sdp
