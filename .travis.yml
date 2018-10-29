@@ -3,13 +3,19 @@ addons:
   chrome: stable
 language: node_js
 node_js:
-- node
+  - node
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
-- npm run test:ci
-- npm run build:ci
+  - npm run test:ci
+  - npm run build:ci
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 before_deploy:
-- npm install -g npm@'>=6'
-- cd dist/ngx-sdp
+  - npm install -g npm@'>=6'
+  - cd dist/ngx-sdp
 deploy:
   provider: npm
   email: erdikose8@gmail.com
@@ -18,3 +24,6 @@ deploy:
   on:
     tags: true
     repo: erdkse/ngx-sdp
+env:
+  global:
+    CC_TEST_REPORTER_ID: PxhSvryBkG0oSMdTn3NO49n3sysqhqPyT3Dsz3WEQC/OyRhNMHvQFn1gjJHcxnDUyMJyADCFAHSTCFcubyZ/pDKya6rXwa5PUGhVff6Z0issntu1d6CkmRrofPtjDQGN6Opwu6E/6yobv4Zk5aTv3UHKOM1nBu+l3h5roP6JKtsLFJSkyH7C6LhXx89iziXjxwNvBla7f9K6brRLx9pBqDyjzKI1PUZK1s5yWMyZAigKVi6S0ggU55nFl8sAWQxCWq5DSYi59GNmybYOZ4J1VNGHJf+9vyCUz0AM2AFB5554xudnmlPJPzMKkyDnv6vvLV0zwxXqSX7F2K44JIIISoJwABtL3lG+Oy3GiuS+VNzAsqHmYysa1Kmzw7F2nBbFXVh7AkM7TgGN0MkPexIbGBPEdPGrE0JnTjBJ0sdtTDsMSpeVZ8xTzoQQOWJ2K+Pn5jzZr0tw/FbTjPQn8msyIt5wAgegLCRDBHf9gTcrk3+ScwaB7yJPma0we8B3+oEpBmeX0KkHHot1jodt0IctbWR0cPK3V4Kis3poPhCzYTwi/qwBWzbCYdhFJKxOw0ugk3EwgtjedZ3BysMn/sTqMaXqRFYvJ3CkwfZHCXht6eavdCpuP52YmdYYBG76DfjOQwLyrNpSbqCB7rZMT8MN7k8MYXvjs5DmusEbXEhQw98=
