@@ -14,8 +14,9 @@ deploy:
   provider: npm
   email: erdikose8@gmail.com
   api_key:
-    secure: kf2XmS60/ZOqONfoFbDJRbIUPP9oI/yCm9eol/ezMguzcOdvnyWAbsK9Pf5RrlEQPp3E+cR9Sdyt8+HFIrG9zdm1fJxYPxQFQDS0rczwi6xVQN9y6SRWZggnO0/CJ2buu5s8EbGvFOT1FYp+0MD1vc/7dbJAOlRjQa3Ty+3bKysDmKfH2dw34m2nOUGhpnpQXVmulhv+U043b0jWtJX+MdjDoo9sw0lz1dqhtiZEbzTstcQ9kbCMFAr/cqgy+54qnGeXJzGm/thfKuYpnJ8/l0EZ5EgL1GZFljlVR8rADl0EcSl34ZnG1/BIdtlr9A0rTYCvWs20wXcmlBWjZFIOqHyEZlK0ivQGhPqa4UMY54NSYtIT6iCUbkpLjW4nfZhLhpnoTdFT3w4UllrnHdY8SxDve2V8h7Q2g7/HR7HALqEphauEEzIfIzlh+d0mouitF7Fj/3bRXo8itgbQ1lm/3qhmtTezGPh5hYezWZQ/wrQXyWZSDm16dRv1EHMhX74OOGMAgL3BotB9Zb2rcmXKDO3c01j9Z/+8NVFd3TxMOt5gC+TYb0EuJ3WcFRkwOEzueGozDtfoh8lY8TQ0yD1ozda+g9tYNJC2xC1dvGfqA4d7msghHkcH1dWEqkkAANwUWMLesizpdXRLGI1yoRqwP0tCipQK2mBajpfwUK9wFI0=
+    secure: HR+vU75i13cg+k1Yt3npSjSRtvRFYsRTEFUE8oY11wxU04fhehsF/KbyB7f3Df+13etJO+u3fa7XThgOt2iooQ8jjTVvZ2FUirElPDIJlTEMAQudUzPcsllk6BLHo7Ezcb2udr9b/30+ZOuqYgvWDiZEcCDi+zvME+13BREYw87RN1MsstySZtkbyh6pCTKxtRc3ePn9LNHmXuRdpGfSd5mFdvoCkbR+9JM33d3uQLTX/38+UfJGxtL7Gy+qrR6Uzv4hwa+8C6yYrdSs5ok4nTKDmGsT3s+oubvtk6vzr8vYywFP4chW3ULa8oXzCrjhpNprzPf77O1ZgPDFtYzCAsKAUnK16XDoofBWZ4umyDBck566whbmFdCmOd90IMmN5/I7H2ZGxQI9ohLEV28CMqmt5HCb0+wPzcoaS+9WgYK/qvGpvYI2bfOAJMTw6Ag5d2D04Y9DV6srUw85s5t2EVIZmCz3LJAlV0KaKDmivsOzV5U/H+Upx7wwFZAcaIbXfN6l9swyVgD8Bek7XnFl02cMrjNM1hqEigiUAjBW7NzFNu7AhEyNfdGj4CWLLPR0FoumDn7XPVdy3cs/Q3/rjkoH4y6rPnaP4fLwGDK0ZAm2SLOUZHJ9hYXWC75cepgvEVpRRlutSpkUvdFUBEP1TRtapKm+JUtD3sms2uEP3Ak=
   on:
-    branch: master
-    tags: true
-    repo: erdkse/ngx-sdp
+    - tags: true
+    - branch: master
+    - repo: erdkse/ngx-sdp
+    - skip_cleanup: true
