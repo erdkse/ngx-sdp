@@ -1,5 +1,8 @@
 dist: trusty
 sudo: required
+env:
+  global:
+    - CC_TEST_REPORTER_ID=rh1DB+j6kns894cj+qyL4mNWsijcmODmsbAXqISgdGUdFZ0skC/+Xw5WIP+Y08P9BI2Uc9wjAXRB4fPmTqURo0zu4jRhLyF+oWfJIQ+BLXwID6UmLo0fHpD74jvrfu5crFz0px0rML1PXuqimeEqbFUEUTN6uZKTCXrL3YbV5hldGqWz+qirAhP5cZsozHpzx8LOrGGi1gPwj+EKbgXjSTaxXc06ljdAjnrcex8zZ6gbzDSBcbfGjrakOsPdEDA/GcJsBpIyRFzfXC9J7L1e1xQyH1AXbE/tfg8j4ZUAixBdzbXii7IjKmR03nVaDHr2H23sVJUGhE2Hg9h84JUrWtp9cpmxYt6kclJzbHu10FxDIapCwPtQFYCZJvy7k/ecjpPpveCJ3WHIkA2rSMGD0aLjUv4IzeljxNM+xBKkxRE6l+wj3tFpYRc1mA2youCFBojqT1dtEUFr5rtvAFm1lAUUp6h0Uhk7iY+VLZ05n920vdGmERYxPzBe6TDdJ9SB8ynJgp0IjZYORw4gAhLxmF6q1jXOxCEg9W0xOY9rw+9uDUiDSIAJPc67SEqothSDBnPVppA1uVTCrxwFHhlkCGZ4Q1nQNqHhBe9VOwojULwYhMcFFOG+gzEJRZxxOuJCzhTOoXC3yDAxoLlWFbwt/jnvHhpzd6udSRKKx7iJPxs=
 language: node_js
 node_js:
   - '8'
@@ -11,17 +14,15 @@ cache:
 install:
   - npm install
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-    > ./cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - './cc-test-reporter before-build'
 script:
   - npm run test:ci
   - npm run build:ci
 after_script:
-  - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+  - './cc-test-reporter after-build -t lcov --debug --exit-code $TRAVIS_TEST_RESULT'
 before_deploy:
-  - npm install -g npm@'>=6'
   - cd dist/ngx-sdp
 deploy:
   provider: npm
@@ -31,6 +32,3 @@ deploy:
   on:
     tags: true
     repo: erdkse/ngx-sdp
-env:
-  global:
-    - CC_TEST_REPORTER_ID=rh1DB+j6kns894cj+qyL4mNWsijcmODmsbAXqISgdGUdFZ0skC/+Xw5WIP+Y08P9BI2Uc9wjAXRB4fPmTqURo0zu4jRhLyF+oWfJIQ+BLXwID6UmLo0fHpD74jvrfu5crFz0px0rML1PXuqimeEqbFUEUTN6uZKTCXrL3YbV5hldGqWz+qirAhP5cZsozHpzx8LOrGGi1gPwj+EKbgXjSTaxXc06ljdAjnrcex8zZ6gbzDSBcbfGjrakOsPdEDA/GcJsBpIyRFzfXC9J7L1e1xQyH1AXbE/tfg8j4ZUAixBdzbXii7IjKmR03nVaDHr2H23sVJUGhE2Hg9h84JUrWtp9cpmxYt6kclJzbHu10FxDIapCwPtQFYCZJvy7k/ecjpPpveCJ3WHIkA2rSMGD0aLjUv4IzeljxNM+xBKkxRE6l+wj3tFpYRc1mA2youCFBojqT1dtEUFr5rtvAFm1lAUUp6h0Uhk7iY+VLZ05n920vdGmERYxPzBe6TDdJ9SB8ynJgp0IjZYORw4gAhLxmF6q1jXOxCEg9W0xOY9rw+9uDUiDSIAJPc67SEqothSDBnPVppA1uVTCrxwFHhlkCGZ4Q1nQNqHhBe9VOwojULwYhMcFFOG+gzEJRZxxOuJCzhTOoXC3yDAxoLlWFbwt/jnvHhpzd6udSRKKx7iJPxs=
