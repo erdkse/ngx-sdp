@@ -2,7 +2,7 @@
 
 
 ![npm](https://img.shields.io/npm/dm/ngx-sdp.svg)
-![Travis (.org)](https://img.shields.io/travis/erdkse/ngx-sdp.svg)
+![Travis (.org)](https://img.shields.io/travis/erdkse/ngx-sdp/master.svg)
 ![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/ngx-sdp.svg) 
 ![NpmLicense](https://img.shields.io/npm/l/ngx-sdp.svg) 
 ![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/ngx-sdp.svg)
