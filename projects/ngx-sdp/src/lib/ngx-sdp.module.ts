@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   declarations: [NgxSdpComponent],
   exports: [NgxSdpComponent]
 })

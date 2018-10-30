@@ -1,11 +1,16 @@
 <div class="container">
   <h3>Select a date..</h3>
   <form [formGroup]="form" class="mt-5">
-    <ngx-sdp formControlName="date" [language]="'en'" [minDate]="minDate"></ngx-sdp>
+    <ngx-sdp formControlName="date" [language]="'tr'" [minDate]="minDate"></ngx-sdp>
   </form>
   <div>
     <button class="btn btn-primary mb-3 mr-3" (click)="selectedDates = []">Clear All</button>
-    <button class="btn btn-primary mb-3" (click)="form.disable()">Disable</button>
-    <p *ngFor="let date of selectedDates"> {{date | date:'dd MMMM yyyy HH:mm zzzz' : '0000'}}</p>
+    <button class="btn btn-primary mb-3 mr-3" (click)="form.disable()">Disable</button>
+    <button class="btn btn-primary mb-3 mr-3" (click)="form.enable()">Enable</button>
+    <button class="btn btn-primary mb-3 mr-3" (click)="changeMinDate()">Change MinDate</button>
+    <button class="btn btn-primary mb-3" (click)="setDate()">Set Date</button>
+    <p *ngFor="let date of selectedDates">
+      {{convertToDate(date) ? (convertToDate(date) | date:'dd MMMM yyyy HH:mm zzzz' : '0000') : 'Null'}}
+    </p>
   </div>
 </div>

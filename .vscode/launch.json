@@ -1,19 +1,18 @@
 {
   "version": "0.2.0",
-  "configurations": [
-    {
+  "configurations": [{
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}",
-      "runtimeExecutable": "/usr/bin/chromium-browser"
-      // "runtimeArgs": [
-      //   "--new-window",
-      //   "-user-data-dir=\"/${workspaceFolder}/DevProfile\"",
-      //   "--remote-debugging-port=9222",
-      //   "--disable-background-networking"
-      // ]
+      "runtimeExecutable": "/usr/bin/chromium-browser",
+      "runtimeArgs": [
+        "--new-window",
+        "-user-data-dir=\"/${workspaceFolder}/DevProfile\"",
+        "--remote-debugging-port=9222",
+        "--disable-background-networking"
+      ]
     },
     {
       "name": "Attach Chrome",
