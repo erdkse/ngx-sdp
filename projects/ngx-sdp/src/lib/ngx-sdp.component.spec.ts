@@ -105,6 +105,12 @@ describe('NgxSdpComponent', () => {
     ]);
   });
 
+  it('should throw error if given date is not a date object', () => {
+    expect(() => {
+      component.writeValue('I am not a date object');
+    }).toThrow();
+  });
+
   it('should select correct date when day is changed', () => {
     const dayToSelect = 5;
 
@@ -153,6 +159,37 @@ describe('NgxSdpComponent', () => {
     ]);
   });
 
+  it('should count days of a month truly', () => {
+    component.writeValue(new Date(Date.UTC(1990, 1, 1, 0, 0, 0, 0)));
+    // Change detecton needs to run this behaviour should change
+    fixture.detectChanges();
+    expect(daySelection.options.length).toBe(29);
+  });
+
+  it('should display zero days if month is not selected', () => {
+    component.writeValue(new Date(Date.UTC(1990, 1, 1, 0, 0, 0, 0)));
+    component.dateForm.controls.month.patchValue(null);
+    // Change detecton needs to run this behaviour should change
+    fixture.detectChanges();
+    expect(daySelection.options.length).toBe(1);
+  });
+
+  it('should disable form when state is disabled', () => {
+    component.setDisabledState(true);
+    expect(
+      daySelection.disabled && monthSelection.disabled && yearSelection.disabled
+    ).toBeTruthy();
+  });
+
+  it('should enable form when state is enabled', () => {
+    component.setDisabledState(false);
+    expect(
+      !daySelection.disabled &&
+        !monthSelection.disabled &&
+        !yearSelection.disabled
+    ).toBeTruthy();
+  });
+
   it('should display months in english on default', () => {
     component.writeValue(givenDate);
 
@@ -169,4 +206,18 @@ describe('NgxSdpComponent', () => {
       'Ağustos'
     );
   });
+
+  // it('should limit maximum year if maxDate property is set', () => {
+  //   component.maxDate = new Date(Date.UTC(2050, 1, 1, 0, 0, 0, 0));
+  //   fixture.detectChanges();
+  //   expect(+yearSelection.options[1].innerHTML).toBe(2050);
+  // });
+
+  // it('should limit minimum year if minDate property is set', () => {
+  //   component.minDate = new Date(Date.UTC(1950, 1, 1, 0, 0, 0, 0));
+  //   fixture.detectChanges();
+  //   expect(
+  //     +yearSelection.options[yearSelection.options.length - 1].innerHTML
+  //   ).toBe(1950);
+  // });
 });

@@ -21,7 +21,7 @@ script:
   - npm run test:ci
   - npm run build:ci
 after_script:
-  - './cc-test-reporter after-build -t lcov --debug --exit-code $TRAVIS_TEST_RESULT'
+  - './cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT'
 before_deploy:
   - cd dist/ngx-sdp
 deploy:
