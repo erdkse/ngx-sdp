@@ -8,7 +8,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   public form: FormGroup;
-  public minDate = new Date(Date.parse('01/01/1950'));
+  public minDate;
   public selectedDates = [];
 
   ngOnInit(): void {
@@ -19,5 +19,9 @@ export class AppComponent implements OnInit {
     this.form.valueChanges.subscribe(value => {
       this.selectedDates.push(value.date);
     });
+  }
+
+  changeMinDate() {
+    this.minDate = new Date(Date.parse('01/01/1950'));
   }
 }

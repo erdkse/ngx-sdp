@@ -5,7 +5,8 @@
   </form>
   <div>
     <button class="btn btn-primary mb-3 mr-3" (click)="selectedDates = []">Clear All</button>
-    <button class="btn btn-primary mb-3" (click)="form.disable()">Disable</button>
+    <button class="btn btn-primary mb-3 mr-3" (click)="form.disable()">Disable</button>
+    <button class="btn btn-primary mb-3" (click)="changeMinDate()">Change MinDate</button>
     <p *ngFor="let date of selectedDates"> {{date | date:'dd MMMM yyyy HH:mm zzzz' : '0000'}}</p>
   </div>
 </div>

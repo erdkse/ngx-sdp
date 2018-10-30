@@ -1,4 +1,13 @@
-import { Component, OnInit, forwardRef, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  forwardRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
@@ -19,7 +28,8 @@ import {
     }
   ]
 })
-export class NgxSdpComponent implements OnInit, ControlValueAccessor {
+export class NgxSdpComponent
+  implements OnInit, OnChanges, ControlValueAccessor {
   public days = [];
   public months = [];
   public years = [];
@@ -42,15 +52,8 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   constructor() {}
 
   ngOnInit() {
-    this.minYear = this.minDate ? this.minDate.getFullYear() : this.minYear;
-    this.maxYear = this.maxDate ? this.maxDate.getFullYear() : this.maxYear;
-
-    for (let year = this.minYear; year <= this.maxYear; year++) {
-      this.years.unshift(year);
-    }
-    for (let month = 0; month < 12; month++) {
-      this.months.push(month);
-    }
+    this.loadYears(this.minDate, this.maxDate);
+    this.loadMonths();
 
     this.dateForm = new FormGroup({
       day: new FormControl(null, Validators.required),
@@ -89,6 +92,31 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.minDate && !changes.minDate.firstChange) {
+      this.loadYears(changes.minDate.currentValue, this.maxDate);
+    }
+    if (changes.maxDate && !changes.maxDate.firstChange) {
+      this.loadYears(this.minDate, changes.maxDate.currentValue);
+    }
+  }
+
+  loadYears(minDate, maxDate) {
+    this.minYear = minDate ? minDate.getFullYear() : this.minYear;
+    this.maxYear = maxDate ? maxDate.getFullYear() : this.maxYear;
+    this.years = [];
+    for (let year = this.minYear; year <= this.maxYear; year++) {
+      this.years.unshift(year);
+    }
+  }
+
+  loadMonths() {
+    this.months = [];
+    for (let month = 0; month < 12; month++) {
+      this.months.push(month);
+    }
+  }
+
   onValueChanges() {
     if (!this.dateForm.disabled) {
       this.setAvailableDays(
@@ -115,19 +143,21 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
       throw new Error('Input variable is not Date object');
     }
 
-    if (date instanceof Date) {
-      this.dateForm.patchValue({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        day: date.getDate()
-      });
-    } else if (date === null || date === undefined) {
+    if (!date) {
       this.dateForm.patchValue({
         year: this.maxDate
           ? this.maxDate.getFullYear()
           : new Date().getFullYear(),
         month: this.maxDate ? this.maxDate.getMonth() : new Date().getMonth(),
         day: this.maxDate ? this.maxDate.getDate() : new Date().getDate()
+      });
+    }
+
+    if (date instanceof Date) {
+      this.dateForm.patchValue({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        day: date.getDate()
       });
     }
   }

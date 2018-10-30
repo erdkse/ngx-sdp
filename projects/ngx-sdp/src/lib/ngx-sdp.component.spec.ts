@@ -7,6 +7,7 @@ import {
 } from './ngx-sdp.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SimpleChange, SimpleChanges } from '@angular/core';
 
 describe('NgxSdpComponent', () => {
   let component: NgxSdpComponent;
@@ -28,6 +29,18 @@ describe('NgxSdpComponent', () => {
   const givenDate: Date = new Date(Date.UTC(1990, 7, 1, 0, 0, 0, 0));
   const monthLabel = MONTH_LABEL;
   const defaultLabel = DEFAULT_LABEL;
+  const simpleChanges: SimpleChanges = {
+    maxDate: new SimpleChange(
+      null,
+      new Date(Date.UTC(2050, 1, 1, 0, 0, 0, 0)),
+      false
+    ),
+    minDate: new SimpleChange(
+      null,
+      new Date(Date.UTC(1950, 1, 1, 0, 0, 0, 0)),
+      false
+    )
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,6 +70,15 @@ describe('NgxSdpComponent', () => {
 
   it('should create component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should create date form', () => {
+    expect(
+      component.dateForm &&
+        component.dateForm.controls.day &&
+        component.dateForm.controls.month &&
+        component.dateForm.controls.year
+    ).toBeTruthy();
   });
 
   it('should select today on default', () => {
@@ -207,17 +229,35 @@ describe('NgxSdpComponent', () => {
     );
   });
 
-  // it('should limit maximum year if maxDate property is set', () => {
-  //   component.maxDate = new Date(Date.UTC(2050, 1, 1, 0, 0, 0, 0));
-  //   fixture.detectChanges();
-  //   expect(+yearSelection.options[1].innerHTML).toBe(2050);
-  // });
+  it('should set maximum year on init', () => {
+    expect(component.maxYear).toBe(today.getFullYear());
+  });
 
-  // it('should limit minimum year if minDate property is set', () => {
-  //   component.minDate = new Date(Date.UTC(1950, 1, 1, 0, 0, 0, 0));
-  //   fixture.detectChanges();
-  //   expect(
-  //     +yearSelection.options[yearSelection.options.length - 1].innerHTML
-  //   ).toBe(1950);
-  // });
+  it('should set minimum year on init', () => {
+    expect(component.minYear).toBe(1900);
+  });
+
+  it('should limit maximum year on init', () => {
+    expect(+yearSelection.options[1].innerHTML).toBe(component.maxYear);
+  });
+
+  it('should limit minimum year on init', () => {
+    expect(
+      +yearSelection.options[yearSelection.options.length - 1].innerHTML
+    ).toBe(component.minYear);
+  });
+
+  it('should limit maximum year if maxDate property changes', () => {
+    component.ngOnChanges(simpleChanges);
+    fixture.detectChanges();
+    expect(+yearSelection.options[1].innerHTML).toBe(2050);
+  });
+
+  it('should limit minimum year if minDate property changes', () => {
+    component.ngOnChanges(simpleChanges);
+    fixture.detectChanges();
+    expect(
+      +yearSelection.options[yearSelection.options.length - 1].innerHTML
+    ).toBe(1950);
+  });
 });
