@@ -62,19 +62,19 @@ export class NgxSdpComponent
   }
 
   dayChanged(day) {
-    this.date.day = day === 'null' ? null : +day;
+    this.date.day = day == null ? null : +day;
     this.changeDetectionRef.detectChanges();
     this.informValueChange();
   }
 
   monthChanged(month) {
-    this.date.month = month === null ? null : +month;
+    this.date.month = month == null ? null : +month;
     this.loadDays(this.date.month, this.date.year);
     this.informValueChange();
   }
 
   yearChanged(year) {
-    this.date.year = year === null ? null : +year;
+    this.date.year = year == null ? null : +year;
     this.loadDays(this.date.month, this.date.year);
     this.informValueChange();
   }
