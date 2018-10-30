@@ -58,23 +58,13 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
       year: new FormControl(null, Validators.required)
     });
 
-    this.dateForm.controls.year.valueChanges.subscribe(year => {
-      if (!this.dateForm.disabled) {
-        this.setAvailableDays(
-          this.dateForm.controls.month.value,
-          this.dateForm.controls.year.value
-        );
-      }
-    });
+    this.dateForm.controls.year.valueChanges.subscribe(year =>
+      this.onValueChanges()
+    );
 
-    this.dateForm.controls.month.valueChanges.subscribe(month => {
-      if (!this.dateForm.disabled) {
-        this.setAvailableDays(
-          this.dateForm.controls.month.value,
-          this.dateForm.controls.year.value
-        );
-      }
-    });
+    this.dateForm.controls.month.valueChanges.subscribe(month =>
+      this.onValueChanges()
+    );
 
     this.dateForm.controls.day.valueChanges.subscribe(day => {
       this.propagateChange(
@@ -99,6 +89,15 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  onValueChanges() {
+    if (!this.dateForm.disabled) {
+      this.setAvailableDays(
+        this.dateForm.controls.month.value,
+        this.dateForm.controls.year.value
+      );
+    }
+  }
+
   setAvailableDays(month, year) {
     this.days = [
       ...Array.from({ length: this.daysInMonth(+month, year) }, (v, k) => k + 1)
@@ -111,7 +110,11 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
     );
   }
 
-  writeValue(date: Date): void {
+  writeValue(date): void {
+    if (date && !(date instanceof Date)) {
+      throw new Error('Input variable is not Date object');
+    }
+
     if (date instanceof Date) {
       this.dateForm.patchValue({
         year: date.getFullYear(),
@@ -126,8 +129,6 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
         month: this.maxDate ? this.maxDate.getMonth() : new Date().getMonth(),
         day: this.maxDate ? this.maxDate.getDate() : new Date().getDate()
       });
-    } else {
-      throw new Error('Input variable is not Date object');
     }
   }
 
