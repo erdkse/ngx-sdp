@@ -1,22 +1,20 @@
-<form [ngClass]="{'show-error':showError}" [formGroup]="dateForm">
-  <div class="form-row">
-    <div class="form-group col-sm-12 col-md-4">
-      <select class="form-control day" formControlName="day">
-        <option [value]="null" [selected]="!dateForm.controls['day'].value">{{defaultLabel[this.language].day}}</option>
-        <option *ngFor="let day of days" [value]="+day" [selected]="dateForm.controls['day'].value == day">{{day}}</option>
-      </select>
-    </div>
-    <div class="form-group col-sm-12 col-md-4">
-      <select class="form-control month" formControlName="month">
-          <option [value]="null" [selected]="!dateForm.controls['month'].value">{{defaultLabel[this.language].month}}</option>
-        <option *ngFor="let month of months" [value]="+month" [selected]="dateForm.controls['month'].value == month">{{monthLabel[this.language][month]}}</option>
-      </select>
-    </div>
-    <div class="form-group col-sm-12 col-md-4">
-      <select class="form-control year" formControlName="year">
-          <option [value]="null" [selected]="!dateForm.controls['year'].value">{{defaultLabel[this.language].year}}</option>
-        <option *ngFor="let year of years" [value]="+year" [selected]="dateForm.controls['year'].value == year">{{year}}</option>
-      </select>
-    </div>
+<div class="form-row" [ngClass]="{'show-error':showError}">
+  <div class="form-group col-sm-12 col-md-4">
+    <select class="form-control day" (change)="dayChanged($event.target.value)" [disabled]="isDisabled">
+      <option [value]="null" [selected]="date.day === null || date.day === undefined">{{defaultLabel[this.language].day}}</option>
+      <option *ngFor="let day of days" [value]="day" [selected]="date.day === day">{{day}}</option>
+    </select>
   </div>
-</form>
+  <div class="form-group col-sm-12 col-md-4">
+    <select class="form-control month" (change)="monthChanged($event.target.value)" [disabled]="isDisabled">
+      <option [value]="null" [selected]="date.month === null || date.month === undefined">{{defaultLabel[this.language].month}}</option>
+      <option *ngFor="let month of months" [value]="month" [selected]="date.month === month">{{monthLabel[this.language][month]}}</option>
+    </select>
+  </div>
+  <div class="form-group col-sm-12 col-md-4">
+    <select class="form-control year" (change)="yearChanged($event.target.value)" [disabled]="isDisabled">
+      <option [value]="null" [selected]="date.year === null || date.year === undefined">{{defaultLabel[this.language].year}}</option>
+      <option *ngFor="let year of years" [value]="year" [selected]="date.year === year">{{year}}</option>
+    </select>
+  </div>
+</div>

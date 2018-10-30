@@ -13,15 +13,36 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      date: new FormControl(new Date(Date.parse('08/01/1990')))
+      date: new FormControl(null)
     });
 
     this.form.valueChanges.subscribe(value => {
-      this.selectedDates.push(value.date);
+      this.selectedDates.push(value.date ? { ...value.date } : null);
     });
   }
 
   changeMinDate() {
-    this.minDate = new Date(Date.parse('01/01/1950'));
+    this.minDate = { day: 1, month: 1, year: 1950 };
+  }
+
+  setDate() {
+    this.form.controls.date.patchValue({ day: 1, month: 7, year: 1990 });
+  }
+
+  convertToDate(selectionDate) {
+    if (selectionDate) {
+      return new Date(
+        Date.UTC(
+          selectionDate.year,
+          selectionDate.month,
+          selectionDate.day,
+          0,
+          0,
+          0,
+          0
+        )
+      );
+    }
+    return null;
   }
 }

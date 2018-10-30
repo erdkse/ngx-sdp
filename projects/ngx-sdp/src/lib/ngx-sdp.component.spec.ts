@@ -3,7 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   NgxSdpComponent,
   MONTH_LABEL,
-  DEFAULT_LABEL
+  DEFAULT_LABEL,
+  ISelectionDate
 } from './ngx-sdp.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,31 +16,17 @@ describe('NgxSdpComponent', () => {
   let daySelection;
   let monthSelection;
   let yearSelection;
-  const today: Date = new Date(
-    Date.UTC(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate(),
-      0,
-      0,
-      0,
-      0
-    )
-  );
-  const givenDate: Date = new Date(Date.UTC(1990, 7, 1, 0, 0, 0, 0));
+  const today: ISelectionDate = {
+    day: new Date().getDate(),
+    month: new Date().getMonth(),
+    year: new Date().getFullYear()
+  };
+  const givenDate: ISelectionDate = { day: 1, month: 7, year: 1990 };
   const monthLabel = MONTH_LABEL;
   const defaultLabel = DEFAULT_LABEL;
   const simpleChanges: SimpleChanges = {
-    maxDate: new SimpleChange(
-      null,
-      new Date(Date.UTC(2050, 1, 1, 0, 0, 0, 0)),
-      false
-    ),
-    minDate: new SimpleChange(
-      null,
-      new Date(Date.UTC(1950, 1, 1, 0, 0, 0, 0)),
-      false
-    )
+    maxDate: new SimpleChange(null, { day: 1, month: 1, year: 2050 }, false),
+    minDate: new SimpleChange(null, { day: 1, month: 1, year: 1950 }, false)
   };
 
   beforeEach(async(() => {
@@ -72,35 +59,16 @@ describe('NgxSdpComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create date form', () => {
-    expect(
-      component.dateForm &&
-        component.dateForm.controls.day &&
-        component.dateForm.controls.month &&
-        component.dateForm.controls.year
-    ).toBeTruthy();
-  });
-
-  it('should select today on default', () => {
+  it('should select nothing on default', () => {
     expect([
-      today.getFullYear(),
-      monthLabel[component.language][today.getMonth()],
-      today.getDate()
+      defaultLabel.en.year,
+      defaultLabel.en.month,
+      defaultLabel.en.day
     ]).toEqual([
-      +yearSelection.options[yearSelection.selectedIndex].innerHTML,
+      yearSelection.options[yearSelection.selectedIndex].innerHTML,
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
-      +daySelection.options[daySelection.selectedIndex].innerHTML
+      daySelection.options[daySelection.selectedIndex].innerHTML
     ]);
-
-    // expect([
-    //   defaultLabel.en.year,
-    //   defaultLabel.en.month,
-    //   defaultLabel.en.day
-    // ]).toEqual([
-    //   yearSelection.options[yearSelection.selectedIndex].innerHTML,
-    //   monthSelection.options[monthSelection.selectedIndex].innerHTML,
-    //   daySelection.options[daySelection.selectedIndex].innerHTML
-    // ]);
   });
 
   it('should select given date', () => {
@@ -113,34 +81,34 @@ describe('NgxSdpComponent', () => {
     ]);
   });
 
-  it('should select today if given date is null', () => {
+  it('should select nothing if given date is null', () => {
     component.writeValue(null);
 
     expect([
-      today.getFullYear(),
-      monthLabel[component.language][today.getMonth()],
-      today.getDate()
+      defaultLabel.en.year,
+      defaultLabel.en.month,
+      defaultLabel.en.day
     ]).toEqual([
-      +yearSelection.options[yearSelection.selectedIndex].innerHTML,
+      yearSelection.options[yearSelection.selectedIndex].innerHTML,
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
-      +daySelection.options[daySelection.selectedIndex].innerHTML
+      daySelection.options[daySelection.selectedIndex].innerHTML
     ]);
   });
 
-  it('should throw error if given date is not a date object', () => {
+  it('should throw error if given date is not a selection date interface', () => {
     expect(() => {
       component.writeValue('I am not a date object');
     }).toThrow();
   });
 
   it('should select correct date when day is changed', () => {
+    component.writeValue(today);
     const dayToSelect = 5;
-
-    component.dateForm.controls.day.patchValue(dayToSelect);
+    component.dayChanged(dayToSelect);
 
     expect([
-      today.getFullYear(),
-      monthLabel[component.language][today.getMonth()],
+      today.year,
+      monthLabel[component.language][today.month],
       dayToSelect
     ]).toEqual([
       +yearSelection.options[yearSelection.selectedIndex].innerHTML,
@@ -150,14 +118,14 @@ describe('NgxSdpComponent', () => {
   });
 
   it('should select correct date when month is changed', () => {
+    component.writeValue(today);
     const monthToSelect = 5;
-
-    component.dateForm.controls.month.patchValue(monthToSelect);
+    component.monthChanged(monthToSelect);
 
     expect([
-      today.getFullYear(),
+      today.year,
       monthLabel[component.language][monthToSelect],
-      today.getDate()
+      today.day
     ]).toEqual([
       +yearSelection.options[yearSelection.selectedIndex].innerHTML,
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
@@ -166,14 +134,14 @@ describe('NgxSdpComponent', () => {
   });
 
   it('should select correct date when year is changed', () => {
+    component.writeValue(today);
     const yearToSelect = 2000;
-
-    component.dateForm.controls.year.patchValue(yearToSelect);
+    component.yearChanged(yearToSelect);
 
     expect([
       yearToSelect,
-      monthLabel[component.language][today.getMonth()],
-      today.getDate()
+      monthLabel[component.language][today.month],
+      today.day
     ]).toEqual([
       +yearSelection.options[yearSelection.selectedIndex].innerHTML,
       monthSelection.options[monthSelection.selectedIndex].innerHTML,
@@ -182,28 +150,30 @@ describe('NgxSdpComponent', () => {
   });
 
   it('should count days of a month truly', () => {
-    component.writeValue(new Date(Date.UTC(1990, 1, 1, 0, 0, 0, 0)));
-    // Change detecton needs to run this behaviour should change
-    fixture.detectChanges();
+    component.writeValue({ day: 1, month: 1, year: 1990 });
     expect(daySelection.options.length).toBe(29);
   });
 
   it('should display zero days if month is not selected', () => {
-    component.writeValue(new Date(Date.UTC(1990, 1, 1, 0, 0, 0, 0)));
-    component.dateForm.controls.month.patchValue(null);
-    // Change detecton needs to run this behaviour should change
-    fixture.detectChanges();
+    component.writeValue(givenDate);
+    component.monthChanged(null);
     expect(daySelection.options.length).toBe(1);
   });
 
-  it('should disable form when state is disabled', () => {
+  it('should display zero days if year is not selected', () => {
+    component.writeValue(givenDate);
+    component.yearChanged(null);
+    expect(daySelection.options.length).toBe(1);
+  });
+
+  it('should disable fields when state is disabled', () => {
     component.setDisabledState(true);
     expect(
       daySelection.disabled && monthSelection.disabled && yearSelection.disabled
     ).toBeTruthy();
   });
 
-  it('should enable form when state is enabled', () => {
+  it('should enable fields when state is enabled', () => {
     component.setDisabledState(false);
     expect(
       !daySelection.disabled &&
@@ -215,22 +185,18 @@ describe('NgxSdpComponent', () => {
   it('should display months in english on default', () => {
     component.writeValue(givenDate);
 
-    expect(monthLabel[component.language][givenDate.getMonth()]).toEqual(
-      'August'
-    );
+    expect(monthLabel[component.language][givenDate.month]).toEqual('August');
   });
 
   it('should change language', () => {
     component.writeValue(givenDate);
     component.language = 'tr';
 
-    expect(monthLabel[component.language][givenDate.getMonth()]).toEqual(
-      'Ağustos'
-    );
+    expect(monthLabel[component.language][givenDate.month]).toEqual('Ağustos');
   });
 
   it('should set maximum year on init', () => {
-    expect(component.maxYear).toBe(today.getFullYear());
+    expect(component.maxYear).toBe(today.year);
   });
 
   it('should set minimum year on init', () => {
@@ -249,13 +215,11 @@ describe('NgxSdpComponent', () => {
 
   it('should limit maximum year if maxDate property changes', () => {
     component.ngOnChanges(simpleChanges);
-    fixture.detectChanges();
     expect(+yearSelection.options[1].innerHTML).toBe(2050);
   });
 
   it('should limit minimum year if minDate property changes', () => {
     component.ngOnChanges(simpleChanges);
-    fixture.detectChanges();
     expect(
       +yearSelection.options[yearSelection.options.length - 1].innerHTML
     ).toBe(1950);
