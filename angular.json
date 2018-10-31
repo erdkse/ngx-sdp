@@ -147,6 +147,7 @@
             "main": "projects/ngx-sdp/src/test.ts",
             "tsConfig": "projects/ngx-sdp/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-sdp/karma.conf.js",
+            "sourceMap": true,
             "codeCoverage": true
           }
         },
