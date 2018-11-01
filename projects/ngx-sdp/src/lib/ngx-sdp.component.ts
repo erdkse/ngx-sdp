@@ -144,11 +144,11 @@ export class NgxSdpComponent
     }
   }
 
-  isNullOrUndefined(value) {
+  isNullOrUndefined(value): boolean {
     return value === null || value === undefined;
   }
 
-  isInstanceOfSelectionDateInterface(value) {
+  isInstanceOfSelectionDateInterface(value): boolean {
     return value && value.year && value.month && value.day;
   }
 
@@ -161,19 +161,6 @@ export class NgxSdpComponent
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
     this.changeDetectionRef.detectChanges();
-  }
-
-  createDateAsUTC(date) {
-    return new Date(
-      Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes(),
-        date.getSeconds()
-      )
-    );
   }
 
   daysInMonth(month: number, year: number) {
