@@ -102,13 +102,13 @@ describe('NgxSdpComponent', () => {
   });
 
   it('should select correct date when day is changed', () => {
-    component.writeValue(today);
+    component.writeValue(givenDate);
     const dayToSelect = 5;
     component.dayChanged(dayToSelect);
 
     expect([
-      today.year,
-      monthLabel[component.language][today.month],
+      givenDate.year,
+      monthLabel[component.language][givenDate.month],
       dayToSelect
     ]).toEqual([
       +yearSelection.options[yearSelection.selectedIndex].innerHTML,
