@@ -48,6 +48,11 @@ export class NgxSdpComponent
   constructor(private changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.maxDate = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+      day: new Date().getDate()
+    };
     this.loadYears(this.minDate, this.maxDate);
     this.loadMonths();
   }
@@ -55,9 +60,11 @@ export class NgxSdpComponent
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.minDate && !changes.minDate.firstChange) {
       this.loadYears(changes.minDate.currentValue, this.maxDate);
+      this.loadMonths();
     }
     if (changes.maxDate && !changes.maxDate.firstChange) {
       this.loadYears(this.minDate, changes.maxDate.currentValue);
+      this.loadMonths();
     }
   }
 
@@ -76,6 +83,7 @@ export class NgxSdpComponent
   yearChanged(year) {
     this.date.year = year == null ? null : +year;
     this.loadDays(this.date.month, this.date.year);
+    this.loadMonths();
     this.informValueChange();
   }
 
@@ -90,17 +98,69 @@ export class NgxSdpComponent
   }
 
   loadMonths() {
-    this.months = [];
-    for (let month = 0; month < 12; month++) {
-      this.months.push(month);
-    }
+    this.months = [...Array.from({ length: 12 }, (v, k) => k)].filter(month => {
+      let state = true;
+
+      if (this.date && this.date.year) {
+        if (this.isISelectionObjectSet(this.maxDate)) {
+          state =
+            state &&
+            (this.date.year === this.maxDate.year
+              ? month <= this.maxDate.month
+              : true);
+        }
+
+        if (this.isISelectionObjectSet(this.minDate)) {
+          state =
+            state &&
+            (this.date.year === this.minDate.year
+              ? month >= this.minDate.month
+              : true);
+        }
+      }
+
+      return state;
+    });
+    this.date.month =
+      this.months.findIndex(e => +e === +this.date.month) > -1
+        ? this.date.month
+        : null;
     this.changeDetectionRef.detectChanges();
   }
 
   loadDays(month, year) {
     this.days = [
       ...Array.from({ length: this.daysInMonth(month, year) }, (v, k) => k + 1)
-    ];
+    ].filter(day => {
+      let state = true;
+
+      if (this.date && this.date.year && this.date.month) {
+        if (this.isISelectionObjectSet(this.maxDate)) {
+          state =
+            state &&
+            this.isDateEarlier(
+              {
+                year: this.date.year,
+                month: this.date.month,
+                day: day
+              },
+              this.maxDate
+            );
+        }
+
+        if (this.isISelectionObjectSet(this.minDate)) {
+          state =
+            state &&
+            this.isDateEarlier(this.minDate, {
+              year: this.date.year,
+              month: this.date.month,
+              day: day
+            });
+        }
+      }
+
+      return state;
+    });
     this.date.day =
       this.days.findIndex(e => +e === +this.date.day) > -1
         ? this.date.day
@@ -109,12 +169,7 @@ export class NgxSdpComponent
   }
 
   informValueChange() {
-    if (
-      !this.isNullOrUndefined(this.date) &&
-      !this.isNullOrUndefined(this.date.year) &&
-      !this.isNullOrUndefined(this.date.month) &&
-      !this.isNullOrUndefined(this.date.day)
-    ) {
+    if (this.isISelectionObjectSet(this.date)) {
       this.propagateChange(this.date);
     } else {
       this.propagateChange(null);
@@ -132,6 +187,8 @@ export class NgxSdpComponent
         month: date.month,
         day: date.day
       };
+      this.loadYears(this.minDate, this.maxDate);
+      this.loadMonths();
       this.loadDays(this.date.month, this.date.year);
     }
 
@@ -144,12 +201,21 @@ export class NgxSdpComponent
     }
   }
 
-  isNullOrUndefined(value) {
+  isNullOrUndefined(value): boolean {
     return value === null || value === undefined;
   }
 
-  isInstanceOfSelectionDateInterface(value) {
+  isInstanceOfSelectionDateInterface(value): boolean {
     return value && value.year && value.month && value.day;
+  }
+
+  isISelectionObjectSet(date: ISelectionDate) {
+    return (
+      !this.isNullOrUndefined(date) &&
+      !this.isNullOrUndefined(date.year) &&
+      !this.isNullOrUndefined(date.month) &&
+      !this.isNullOrUndefined(date.day)
+    );
   }
 
   registerOnChange(fn) {
@@ -163,24 +229,30 @@ export class NgxSdpComponent
     this.changeDetectionRef.detectChanges();
   }
 
-  createDateAsUTC(date) {
-    return new Date(
-      Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes(),
-        date.getSeconds()
-      )
-    );
-  }
-
   daysInMonth(month: number, year: number) {
     if (this.isNullOrUndefined(month) || this.isNullOrUndefined(year)) {
       return 0;
     }
     return new Date(Date.UTC(year, month + 1, 0, 0, 0, 0, 0)).getDate();
+  }
+
+  isDateEarlier(date: ISelectionDate, dateToCompare: ISelectionDate) {
+    if (!date || !dateToCompare) {
+      throw new Error('You Must provide two dates');
+    }
+
+    return (
+      new Date(date.year, date.month, date.day, 0, 0, 0, 0).getTime() <=
+      new Date(
+        dateToCompare.year,
+        dateToCompare.month,
+        dateToCompare.day,
+        0,
+        0,
+        0,
+        0
+      ).getTime()
+    );
   }
 }
 
