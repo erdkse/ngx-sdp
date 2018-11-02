@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   }
 
   changeMinDate() {
-    this.minDate = { day: 1, month: 1, year: 1950 };
+    this.minDate = { day: 23, month: 3, year: 1920 };
   }
 
   setDate() {
