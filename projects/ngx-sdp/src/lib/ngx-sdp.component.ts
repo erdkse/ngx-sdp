@@ -187,6 +187,8 @@ export class NgxSdpComponent
         month: date.month,
         day: date.day
       };
+      this.loadYears(this.minDate, this.maxDate);
+      this.loadMonths();
       this.loadDays(this.date.month, this.date.year);
     }
 

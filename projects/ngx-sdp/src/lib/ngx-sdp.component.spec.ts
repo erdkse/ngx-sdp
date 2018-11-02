@@ -26,7 +26,7 @@ describe('NgxSdpComponent', () => {
   const defaultLabel = DEFAULT_LABEL;
   const simpleChanges: SimpleChanges = {
     maxDate: new SimpleChange(null, { day: 1, month: 1, year: 2050 }, false),
-    minDate: new SimpleChange(null, { day: 1, month: 1, year: 1950 }, false)
+    minDate: new SimpleChange(null, { day: 29, month: 9, year: 1923 }, false)
   };
 
   beforeEach(async(() => {
@@ -222,6 +222,66 @@ describe('NgxSdpComponent', () => {
     component.ngOnChanges(simpleChanges);
     expect(
       +yearSelection.options[yearSelection.options.length - 1].innerHTML
-    ).toBe(1950);
+    ).toBe(1923);
+  });
+
+  it('should limit minimum visible day to mininum date', () => {
+    component.minDate = {
+      year: 1923,
+      month: 9,
+      day: 29
+    };
+    component.writeValue({
+      year: 1923,
+      month: 9,
+      day: 1
+    });
+    expect(+daySelection.options[1].innerHTML).toBe(29);
+  });
+
+  it('should limit maximum visible day to maximum date', () => {
+    component.maxDate = {
+      year: 2050,
+      month: 8,
+      day: 3
+    };
+    component.writeValue({
+      year: 2050,
+      month: 8,
+      day: 1
+    });
+    expect(
+      +daySelection.options[daySelection.options.length - 1].innerHTML
+    ).toBe(3);
+  });
+
+  it('should limit minimum visible month to mininum date', () => {
+    component.minDate = {
+      year: 1923,
+      month: 9,
+      day: 29
+    };
+    component.writeValue({
+      year: 1923,
+      month: 9,
+      day: 1
+    });
+    expect(monthSelection.options[1].innerHTML).toBe('October');
+  });
+
+  it('should limit maximum visible month to maximum date', () => {
+    component.maxDate = {
+      year: 2050,
+      month: 8,
+      day: 3
+    };
+    component.writeValue({
+      year: 2050,
+      month: 8,
+      day: 1
+    });
+    expect(
+      monthSelection.options[monthSelection.options.length - 1].innerHTML
+    ).toBe('September');
   });
 });
