@@ -1,20 +1,35 @@
+dist: trusty
 sudo: required
-addons:
-  chrome: stable
+env:
+  global:
+    - CC_TEST_REPORTER_ID=rh1DB+j6kns894cj+qyL4mNWsijcmODmsbAXqISgdGUdFZ0skC/+Xw5WIP+Y08P9BI2Uc9wjAXRB4fPmTqURo0zu4jRhLyF+oWfJIQ+BLXwID6UmLo0fHpD74jvrfu5crFz0px0rML1PXuqimeEqbFUEUTN6uZKTCXrL3YbV5hldGqWz+qirAhP5cZsozHpzx8LOrGGi1gPwj+EKbgXjSTaxXc06ljdAjnrcex8zZ6gbzDSBcbfGjrakOsPdEDA/GcJsBpIyRFzfXC9J7L1e1xQyH1AXbE/tfg8j4ZUAixBdzbXii7IjKmR03nVaDHr2H23sVJUGhE2Hg9h84JUrWtp9cpmxYt6kclJzbHu10FxDIapCwPtQFYCZJvy7k/ecjpPpveCJ3WHIkA2rSMGD0aLjUv4IzeljxNM+xBKkxRE6l+wj3tFpYRc1mA2youCFBojqT1dtEUFr5rtvAFm1lAUUp6h0Uhk7iY+VLZ05n920vdGmERYxPzBe6TDdJ9SB8ynJgp0IjZYORw4gAhLxmF6q1jXOxCEg9W0xOY9rw+9uDUiDSIAJPc67SEqothSDBnPVppA1uVTCrxwFHhlkCGZ4Q1nQNqHhBe9VOwojULwYhMcFFOG+gzEJRZxxOuJCzhTOoXC3yDAxoLlWFbwt/jnvHhpzd6udSRKKx7iJPxs=
 language: node_js
 node_js:
-- node
+  - '8'
+addons:
+  chrome: stable
+cache:
+  directories:
+    - './node_modules'
+install:
+  - npm install
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - './cc-test-reporter before-build'
 script:
-- npm run test:ci
-- npm run build:ci
+  - npm run test:ci
+  - npm run build:ci
+after_script:
+  - './cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT'
 before_deploy:
-- cd dist/ngx-sdp
+  - cd dist/ngx-sdp
 deploy:
   provider: npm
   email: erdikose8@gmail.com
   api_key:
-    secure: kf2XmS60/ZOqONfoFbDJRbIUPP9oI/yCm9eol/ezMguzcOdvnyWAbsK9Pf5RrlEQPp3E+cR9Sdyt8+HFIrG9zdm1fJxYPxQFQDS0rczwi6xVQN9y6SRWZggnO0/CJ2buu5s8EbGvFOT1FYp+0MD1vc/7dbJAOlRjQa3Ty+3bKysDmKfH2dw34m2nOUGhpnpQXVmulhv+U043b0jWtJX+MdjDoo9sw0lz1dqhtiZEbzTstcQ9kbCMFAr/cqgy+54qnGeXJzGm/thfKuYpnJ8/l0EZ5EgL1GZFljlVR8rADl0EcSl34ZnG1/BIdtlr9A0rTYCvWs20wXcmlBWjZFIOqHyEZlK0ivQGhPqa4UMY54NSYtIT6iCUbkpLjW4nfZhLhpnoTdFT3w4UllrnHdY8SxDve2V8h7Q2g7/HR7HALqEphauEEzIfIzlh+d0mouitF7Fj/3bRXo8itgbQ1lm/3qhmtTezGPh5hYezWZQ/wrQXyWZSDm16dRv1EHMhX74OOGMAgL3BotB9Zb2rcmXKDO3c01j9Z/+8NVFd3TxMOt5gC+TYb0EuJ3WcFRkwOEzueGozDtfoh8lY8TQ0yD1ozda+g9tYNJC2xC1dvGfqA4d7msghHkcH1dWEqkkAANwUWMLesizpdXRLGI1yoRqwP0tCipQK2mBajpfwUK9wFI0=
+    secure: YFmD+CLX4y/8WhwOAZjvqAAg4loNwa/sfUQ/2+aJMDRxTkQHcoCPCPuMRhwDeM7+9qhIG5QremiZ3/uk2R/RvJIEVRaZ+tk8LoyVRAypMRlJUM07RYoE3eFVHFiWFWhmHFXuTXTUyCicN9IpaEl/rVSHBnhTJu4TIgBuWH9OyDM2NcI8cyuJXtrFnwuhV2nkgyO/IH6c7TZXxtehJNrz470Br8pyGc+vt7xoJtJAOJSR1vDAg5kqkSwqSX/A5/R4qARDRd9sPduWdb/lfT3uHY2JwDbYHNqIKC+kOoIQqdVUQ/wKi/MR3MI+SBQjWalhlb1/6ZVhVO5qhTnS2LS/SZwzu8uyrpb06OEyVIQ8WSLI1C7jbS7C4F2pZMkaISgPz9ULmMfLxS2HLaCXIXmk5UhCLzE80v59sF7VjU/mafgkHepIsKY8z+YCdo1TniaF+b1t4ftLv5buAr50vuELYhhXPkh6gZHkNjwZwT3DDyARqtB6HBospQDV09XTF1aFE8W3IplIFQ32fcmJrQOmGHK+aEvlOrNDuPPLJDFtYgVb5rCcCsirdX/LeGnAI2KzRDO/wBFryAzkadnhSsFVMiix2G6Mp0UiK+vcNb8Yso9AAJwgEWfBMTqlLTxd+XN8VFwBWnuAAow/QpFfiSMkS0lKP0mBcIXEnqnIDx/8O1E=
   on:
-    branch: master
     tags: true
     repo: erdkse/ngx-sdp
+    branch: master

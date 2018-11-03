@@ -29,12 +29,10 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -148,7 +146,9 @@
           "options": {
             "main": "projects/ngx-sdp/src/test.ts",
             "tsConfig": "projects/ngx-sdp/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-sdp/karma.conf.js"
+            "karmaConfig": "projects/ngx-sdp/karma.conf.js",
+            "sourceMap": true,
+            "codeCoverage": true
           }
         },
         "lint": {

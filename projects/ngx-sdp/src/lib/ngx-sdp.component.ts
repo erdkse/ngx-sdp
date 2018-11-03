@@ -1,11 +1,14 @@
-import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-  FormGroup,
-  FormControl,
-  Validators
-} from '@angular/forms';
+  Component,
+  OnInit,
+  forwardRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'ngx-sdp',
@@ -17,118 +20,202 @@ import {
       useExisting: forwardRef(() => NgxSdpComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgxSdpComponent implements OnInit, ControlValueAccessor {
+export class NgxSdpComponent
+  implements OnInit, OnChanges, ControlValueAccessor {
+  public isDisabled: boolean = false;
   public days = [];
   public months = [];
   public years = [];
   @Input()
-  minDate: Date;
+  public showError: boolean = false;
   @Input()
-  showError: boolean = false;
+  public minDate: ISelectionDate;
   @Input()
-  maxDate: Date;
+  public maxDate: ISelectionDate;
   @Input()
-  language: string = 'en';
+  public language: string = 'en';
   public minYear: number = 1900;
   public maxYear = new Date().getFullYear();
   public monthLabel = MONTH_LABEL;
   public defaultLabel = DEFAULT_LABEL;
-  public dateForm: FormGroup;
+  public date: ISelectionDate = { day: null, month: null, year: null };
   public today: Date = new Date();
   public propagateChange = (_: any) => {};
 
-  constructor() {}
+  constructor(private changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.minYear = this.minDate ? this.minDate.getFullYear() : this.minYear;
-    this.maxYear = this.maxDate ? this.maxDate.getFullYear() : this.maxYear;
-
-    for (let year = this.minYear; year <= this.maxYear; year++) {
-      this.years.unshift(year);
-    }
-    for (let month = 0; month < 12; month++) {
-      this.months.push(month);
-    }
-
-    this.dateForm = new FormGroup({
-      day: new FormControl(null, Validators.required),
-      month: new FormControl(null, Validators.required),
-      year: new FormControl(null, Validators.required)
-    });
-
-    this.dateForm.controls.year.valueChanges.subscribe(year => {
-      if (!this.dateForm.disabled) {
-        this.setAvailableDays(
-          this.dateForm.controls.month.value,
-          this.dateForm.controls.year.value
-        );
-      }
-    });
-
-    this.dateForm.controls.month.valueChanges.subscribe(month => {
-      if (!this.dateForm.disabled) {
-        this.setAvailableDays(
-          this.dateForm.controls.month.value,
-          this.dateForm.controls.year.value
-        );
-      }
-    });
-
-    this.dateForm.controls.day.valueChanges.subscribe(day => {
-      this.propagateChange(
-        new Date(
-          Date.UTC(
-            +this.dateForm.controls.year.value,
-            +this.dateForm.controls.month.value,
-            +this.dateForm.controls.day.value,
-            0,
-            0,
-            0,
-            0
-          )
-        )
-      );
-    });
-
-    this.dateForm.patchValue({
+    this.maxDate = {
       year: new Date().getFullYear(),
       month: new Date().getMonth(),
       day: new Date().getDate()
-    });
+    };
+    this.loadYears(this.minDate, this.maxDate);
+    this.loadMonths();
   }
 
-  setAvailableDays(month, year) {
-    this.days = [
-      ...Array.from({ length: this.daysInMonth(+month, year) }, (v, k) => k + 1)
-    ];
-
-    this.dateForm.controls.day.patchValue(
-      this.days.findIndex(e => +e === +this.dateForm.value.day) > -1
-        ? +this.dateForm.value.day
-        : 1
-    );
-  }
-
-  writeValue(date: Date): void {
-    if (date instanceof Date) {
-      this.dateForm.patchValue({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        day: date.getDate()
-      });
-    } else if (date === null || date === undefined) {
-      this.dateForm.patchValue({
-        year: this.maxDate
-          ? this.maxDate.getFullYear()
-          : new Date().getFullYear(),
-        month: this.maxDate ? this.maxDate.getMonth() : new Date().getMonth(),
-        day: this.maxDate ? this.maxDate.getDate() : new Date().getDate()
-      });
-    } else {
-      throw new Error('Input variable is not Date object');
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.minDate && !changes.minDate.firstChange) {
+      this.loadYears(changes.minDate.currentValue, this.maxDate);
+      this.loadMonths();
     }
+    if (changes.maxDate && !changes.maxDate.firstChange) {
+      this.loadYears(this.minDate, changes.maxDate.currentValue);
+      this.loadMonths();
+    }
+  }
+
+  dayChanged(day) {
+    this.date.day = day == null ? null : +day;
+    this.changeDetectionRef.detectChanges();
+    this.informValueChange();
+  }
+
+  monthChanged(month) {
+    this.date.month = month == null ? null : +month;
+    this.loadDays(this.date.month, this.date.year);
+    this.informValueChange();
+  }
+
+  yearChanged(year) {
+    this.date.year = year == null ? null : +year;
+    this.loadDays(this.date.month, this.date.year);
+    this.loadMonths();
+    this.informValueChange();
+  }
+
+  loadYears(minDate, maxDate) {
+    this.minYear = minDate ? minDate.year : this.minYear;
+    this.maxYear = maxDate ? maxDate.year : this.maxYear;
+    this.years = [];
+    for (let year = this.minYear; year <= this.maxYear; year++) {
+      this.years.unshift(year);
+    }
+    this.changeDetectionRef.detectChanges();
+  }
+
+  loadMonths() {
+    this.months = [...Array.from({ length: 12 }, (v, k) => k)].filter(month => {
+      let state = true;
+
+      if (this.date && this.date.year) {
+        if (this.isISelectionObjectSet(this.maxDate)) {
+          state =
+            state &&
+            (this.date.year === this.maxDate.year
+              ? month <= this.maxDate.month
+              : true);
+        }
+
+        if (this.isISelectionObjectSet(this.minDate)) {
+          state =
+            state &&
+            (this.date.year === this.minDate.year
+              ? month >= this.minDate.month
+              : true);
+        }
+      }
+
+      return state;
+    });
+    this.date.month =
+      this.months.findIndex(e => +e === +this.date.month) > -1
+        ? this.date.month
+        : null;
+    this.changeDetectionRef.detectChanges();
+  }
+
+  loadDays(month, year) {
+    this.days = [
+      ...Array.from({ length: this.daysInMonth(month, year) }, (v, k) => k + 1)
+    ].filter(day => {
+      let state = true;
+
+      if (this.date && this.date.year && this.date.month) {
+        if (this.isISelectionObjectSet(this.maxDate)) {
+          state =
+            state &&
+            this.isDateEarlier(
+              {
+                year: this.date.year,
+                month: this.date.month,
+                day: day
+              },
+              this.maxDate
+            );
+        }
+
+        if (this.isISelectionObjectSet(this.minDate)) {
+          state =
+            state &&
+            this.isDateEarlier(this.minDate, {
+              year: this.date.year,
+              month: this.date.month,
+              day: day
+            });
+        }
+      }
+
+      return state;
+    });
+    this.date.day =
+      this.days.findIndex(e => +e === +this.date.day) > -1
+        ? this.date.day
+        : null;
+    this.changeDetectionRef.detectChanges();
+  }
+
+  informValueChange() {
+    if (this.isISelectionObjectSet(this.date)) {
+      this.propagateChange(this.date);
+    } else {
+      this.propagateChange(null);
+    }
+  }
+
+  writeValue(date): void {
+    if (date && !this.isInstanceOfSelectionDateInterface(date)) {
+      throw new Error('Input variable is not SelectionDate object');
+    }
+
+    if (this.isInstanceOfSelectionDateInterface(date)) {
+      this.date = {
+        year: date.year,
+        month: date.month,
+        day: date.day
+      };
+      this.loadYears(this.minDate, this.maxDate);
+      this.loadMonths();
+      this.loadDays(this.date.month, this.date.year);
+    }
+
+    if (!date) {
+      this.date = {
+        year: null,
+        month: null,
+        day: null
+      };
+    }
+  }
+
+  isNullOrUndefined(value): boolean {
+    return value === null || value === undefined;
+  }
+
+  isInstanceOfSelectionDateInterface(value): boolean {
+    return value && value.year && value.month && value.day;
+  }
+
+  isISelectionObjectSet(date: ISelectionDate) {
+    return (
+      !this.isNullOrUndefined(date) &&
+      !this.isNullOrUndefined(date.year) &&
+      !this.isNullOrUndefined(date.month) &&
+      !this.isNullOrUndefined(date.day)
+    );
   }
 
   registerOnChange(fn) {
@@ -138,31 +225,34 @@ export class NgxSdpComponent implements OnInit, ControlValueAccessor {
   registerOnTouched(fn: any): void {}
 
   setDisabledState?(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.dateForm.disable();
-    } else {
-      this.dateForm.enable();
-    }
-  }
-
-  createDateAsUTC(date) {
-    return new Date(
-      Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes(),
-        date.getSeconds()
-      )
-    );
+    this.isDisabled = isDisabled;
+    this.changeDetectionRef.detectChanges();
   }
 
   daysInMonth(month: number, year: number) {
-    if (!month || !year) {
+    if (this.isNullOrUndefined(month) || this.isNullOrUndefined(year)) {
       return 0;
     }
-    return new Date(Date.UTC(+year, +month + 1, 0, 0, 0, 0, 0)).getDate();
+    return new Date(Date.UTC(year, month + 1, 0, 0, 0, 0, 0)).getDate();
+  }
+
+  isDateEarlier(date: ISelectionDate, dateToCompare: ISelectionDate) {
+    if (!date || !dateToCompare) {
+      throw new Error('You Must provide two dates');
+    }
+
+    return (
+      new Date(date.year, date.month, date.day, 0, 0, 0, 0).getTime() <=
+      new Date(
+        dateToCompare.year,
+        dateToCompare.month,
+        dateToCompare.day,
+        0,
+        0,
+        0,
+        0
+      ).getTime()
+    );
   }
 }
 
@@ -209,3 +299,9 @@ export const DEFAULT_LABEL = {
     year: 'Pick a year'
   }
 };
+
+export interface ISelectionDate {
+  day: number;
+  month: number;
+  year: number;
+}
