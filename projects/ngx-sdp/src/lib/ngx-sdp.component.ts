@@ -69,19 +69,19 @@ export class NgxSdpComponent
   }
 
   dayChanged(day) {
-    this.date.day = day == null ? null : +day;
+    this.date.day = day === null || day === 'null' ? null : +day;
     this.changeDetectionRef.detectChanges();
     this.informValueChange();
   }
 
   monthChanged(month) {
-    this.date.month = month == null ? null : +month;
+    this.date.month = month === null || month === 'null' ? null : +month;
     this.loadDays(this.date.month, this.date.year);
     this.informValueChange();
   }
 
   yearChanged(year) {
-    this.date.year = year == null ? null : +year;
+    this.date.year = year === null || year === 'null' ? null : +year;
     this.loadDays(this.date.month, this.date.year);
     this.loadMonths();
     this.informValueChange();
@@ -201,8 +201,8 @@ export class NgxSdpComponent
     }
   }
 
-  isNullOrUndefined(value): boolean {
-    return value === null || value === undefined;
+  isDefined(value): boolean {
+    return !(value === null || value === undefined || value === NaN);
   }
 
   isInstanceOfSelectionDateInterface(value): boolean {
@@ -211,10 +211,10 @@ export class NgxSdpComponent
 
   isISelectionObjectSet(date: ISelectionDate) {
     return (
-      !this.isNullOrUndefined(date) &&
-      !this.isNullOrUndefined(date.year) &&
-      !this.isNullOrUndefined(date.month) &&
-      !this.isNullOrUndefined(date.day)
+      this.isDefined(date) &&
+      this.isDefined(date.year) &&
+      this.isDefined(date.month) &&
+      this.isDefined(date.day)
     );
   }
 
@@ -230,7 +230,7 @@ export class NgxSdpComponent
   }
 
   daysInMonth(month: number, year: number) {
-    if (this.isNullOrUndefined(month) || this.isNullOrUndefined(year)) {
+    if (!this.isDefined(month) || !this.isDefined(year)) {
       return 0;
     }
     return new Date(Date.UTC(year, month + 1, 0, 0, 0, 0, 0)).getDate();
