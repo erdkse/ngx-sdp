@@ -185,6 +185,7 @@ export class NgxSdpComponent
         month: date.month,
         day: date.day
       };
+
       this.loadYears(this.minDate, this.maxDate);
       this.loadMonths();
       this.loadDays(this.date.month, this.date.year);
@@ -237,7 +238,7 @@ export class NgxSdpComponent
 
   isDateEarlier(date: ISelectionDate, dateToCompare: ISelectionDate) {
     if (!date || !dateToCompare) {
-      throw new Error('You Must provide two dates');
+      throw new Error('You must provide two dates');
     }
 
     return (
