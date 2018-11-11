@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   }
 
   setDate() {
-    this.form.controls.date.patchValue({ day: 1, month: 7, year: 1990 });
+    this.form.controls.date.patchValue({ day: 'null', month: 7, year: 1990 });
   }
 
   convertToDate(selectionDate) {

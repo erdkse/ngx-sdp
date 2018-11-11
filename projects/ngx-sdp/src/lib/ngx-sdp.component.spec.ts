@@ -101,6 +101,15 @@ describe('NgxSdpComponent', () => {
     }).toThrow();
   });
 
+  it('should set given date if some properties are null', () => {
+    component.writeValue({ year: 2010, month: null, day: null });
+    expect([2010, defaultLabel.en.month, defaultLabel.en.day]).toEqual([
+      +yearSelection.options[yearSelection.selectedIndex].innerHTML,
+      monthSelection.options[monthSelection.selectedIndex].innerHTML,
+      daySelection.options[daySelection.selectedIndex].innerHTML
+    ]);
+  });
+
   it('should select correct date when day is changed', () => {
     component.writeValue(givenDate);
     const dayToSelect = 5;
@@ -283,5 +292,17 @@ describe('NgxSdpComponent', () => {
     expect(
       monthSelection.options[monthSelection.options.length - 1].innerHTML
     ).toBe('September');
+  });
+
+  it('should select correct date when month is changed to 0', () => {
+    component.writeValue(givenDate);
+
+    component.monthChanged(0);
+
+    expect([1990, monthLabel[component.language][0], 1]).toEqual([
+      +yearSelection.options[yearSelection.selectedIndex].innerHTML,
+      monthSelection.options[monthSelection.selectedIndex].innerHTML,
+      +daySelection.options[daySelection.selectedIndex].innerHTML
+    ]);
   });
 });

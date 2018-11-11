@@ -122,7 +122,7 @@ export class NgxSdpComponent
       return state;
     });
     this.date.month =
-      this.months.findIndex(e => +e === +this.date.month) > -1
+      this.months.findIndex(e => e === this.date.month) > -1
         ? this.date.month
         : null;
     this.changeDetectionRef.detectChanges();
@@ -162,9 +162,7 @@ export class NgxSdpComponent
       return state;
     });
     this.date.day =
-      this.days.findIndex(e => +e === +this.date.day) > -1
-        ? this.date.day
-        : null;
+      this.days.findIndex(e => e === this.date.day) > -1 ? this.date.day : null;
     this.changeDetectionRef.detectChanges();
   }
 
@@ -177,11 +175,11 @@ export class NgxSdpComponent
   }
 
   writeValue(date): void {
-    if (date && !this.isISelectionObjectSet(date)) {
+    if (date && !this.isInstanceOfSelectionDateInterface(date)) {
       throw new Error('Input variable is not SelectionDate object');
     }
 
-    if (this.isISelectionObjectSet(date)) {
+    if (this.isInstanceOfSelectionDateInterface(date)) {
       this.date = {
         year: date.year,
         month: date.month,
@@ -203,6 +201,20 @@ export class NgxSdpComponent
 
   isDefined(value): boolean {
     return !(value === null || value === undefined || value === NaN);
+  }
+
+  isInstanceOfSelectionDateInterface(value): boolean {
+    if (value && typeof value === 'object') {
+      return (
+        value.hasOwnProperty('year') &&
+        (value.year === null || Number.isInteger(value.year)) &&
+        value.hasOwnProperty('month') &&
+        (value.month === null || Number.isInteger(value.month)) &&
+        value.hasOwnProperty('day') &&
+        (value.day === null || Number.isInteger(value.day))
+      );
+    }
+    return false;
   }
 
   isISelectionObjectSet(date: ISelectionDate) {
