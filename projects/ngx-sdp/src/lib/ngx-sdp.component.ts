@@ -177,11 +177,11 @@ export class NgxSdpComponent
   }
 
   writeValue(date): void {
-    if (date && !this.isInstanceOfSelectionDateInterface(date)) {
+    if (date && !this.isISelectionObjectSet(date)) {
       throw new Error('Input variable is not SelectionDate object');
     }
 
-    if (this.isInstanceOfSelectionDateInterface(date)) {
+    if (this.isISelectionObjectSet(date)) {
       this.date = {
         year: date.year,
         month: date.month,
@@ -203,10 +203,6 @@ export class NgxSdpComponent
 
   isDefined(value): boolean {
     return !(value === null || value === undefined || value === NaN);
-  }
-
-  isInstanceOfSelectionDateInterface(value): boolean {
-    return value && value.year && value.month && value.day;
   }
 
   isISelectionObjectSet(date: ISelectionDate) {
