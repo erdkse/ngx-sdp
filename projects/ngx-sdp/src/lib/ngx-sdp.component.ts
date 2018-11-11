@@ -102,7 +102,7 @@ export class NgxSdpComponent
       let state = true;
 
       if (this.date && this.date.year) {
-        if (this.isISelectionObjectSet(this.maxDate)) {
+        if (this.isInstanceOfSelectionDateInterface(this.maxDate)) {
           state =
             state &&
             (this.date.year === this.maxDate.year
@@ -110,7 +110,7 @@ export class NgxSdpComponent
               : true);
         }
 
-        if (this.isISelectionObjectSet(this.minDate)) {
+        if (this.isInstanceOfSelectionDateInterface(this.minDate)) {
           state =
             state &&
             (this.date.year === this.minDate.year
@@ -135,7 +135,7 @@ export class NgxSdpComponent
       let state = true;
 
       if (this.date && this.date.year && this.date.month) {
-        if (this.isISelectionObjectSet(this.maxDate)) {
+        if (this.isInstanceOfSelectionDateInterface(this.maxDate)) {
           state =
             state &&
             this.isDateEarlier(
@@ -148,7 +148,7 @@ export class NgxSdpComponent
             );
         }
 
-        if (this.isISelectionObjectSet(this.minDate)) {
+        if (this.isInstanceOfSelectionDateInterface(this.minDate)) {
           state =
             state &&
             this.isDateEarlier(this.minDate, {
@@ -167,7 +167,7 @@ export class NgxSdpComponent
   }
 
   informValueChange() {
-    if (this.isISelectionObjectSet(this.date)) {
+    if (this.isInstanceOfSelectionDateInterface(this.date)) {
       this.propagateChange(this.date);
     } else {
       this.propagateChange(null);
@@ -217,14 +217,14 @@ export class NgxSdpComponent
     return false;
   }
 
-  isISelectionObjectSet(date: ISelectionDate) {
-    return (
-      this.isDefined(date) &&
-      this.isDefined(date.year) &&
-      this.isDefined(date.month) &&
-      this.isDefined(date.day)
-    );
-  }
+  // isISelectionObjectSet(date: ISelectionDate) {
+  //   return (
+  //     this.isDefined(date) &&
+  //     this.isDefined(date.year) &&
+  //     this.isDefined(date.month) &&
+  //     this.isDefined(date.day)
+  //   );
+  // }
 
   registerOnChange(fn) {
     this.propagateChange = fn;

@@ -10,7 +10,10 @@
     <button class="btn btn-primary mb-3 mr-3" (click)="changeMinDate()">Change MinDate</button>
     <button class="btn btn-primary mb-3" (click)="setDate()">Set Date</button>
     <p *ngFor="let date of selectedDates">
-      {{convertToDate(date) ? (convertToDate(date) | date:'dd MMMM yyyy HH:mm zzzz' : '0000') : 'Null'}}
+      <span *ngIf="!date">Selection is Null</span>
+      <span *ngIf="date" class="mr-2">Day : {{date.day ? date.day : 'null'}}</span>
+      <span *ngIf="date" class="mr-2">Month : {{date.month ? date.month : 'null'}}</span>
+      <span *ngIf="date">Year : {{date.year ? date.year : 'null'}}</span>
     </p>
   </div>
 </div>
