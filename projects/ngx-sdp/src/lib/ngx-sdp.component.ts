@@ -207,11 +207,11 @@ export class NgxSdpComponent
     if (value && typeof value === 'object') {
       return (
         value.hasOwnProperty('year') &&
-        Number.isInteger(value.year) &&
+        (value.year === null || Number.isInteger(value.year)) &&
         value.hasOwnProperty('month') &&
-        Number.isInteger(value.month) &&
+        (value.month === null || Number.isInteger(value.month)) &&
         value.hasOwnProperty('day') &&
-        Number.isInteger(value.day)
+        (value.day === null || Number.isInteger(value.day))
       );
     }
     return false;
