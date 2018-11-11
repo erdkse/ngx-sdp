@@ -217,15 +217,6 @@ export class NgxSdpComponent
     return false;
   }
 
-  // isISelectionObjectSet(date: ISelectionDate) {
-  //   return (
-  //     this.isDefined(date) &&
-  //     this.isDefined(date.year) &&
-  //     this.isDefined(date.month) &&
-  //     this.isDefined(date.day)
-  //   );
-  // }
-
   registerOnChange(fn) {
     this.propagateChange = fn;
   }
